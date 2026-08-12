@@ -8,7 +8,8 @@
     "build": "vite build",
     "start": "npm run build && cd server && npm start",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "push-all": "git add . && git commit -m \"auto: update project files\" && git push origin main"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
