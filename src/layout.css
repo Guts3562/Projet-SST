@@ -1,0 +1,417 @@
+/* ═══════════════════════════════════════════════════════════════
+   SST Tunisie — layout.css
+   Responsive sidebar layout & navigation design
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --sidebar-width: 280px;
+  --topbar-height: 70px;
+  --transition-speed: 0.3s;
+}
+
+/* ─── APP SHELL CONTAINER ────────────────────────────────────── */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  background: var(--bg-body);
+}
+
+/* ─── SIDEBAR LAYOUT ─────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: var(--nav-bg);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  /* Always start off-screen — toggled via .open class */
+  transform: translateX(-100%);
+  transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 2px 8px rgba(192, 57, 43, 0.3));
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-main {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text-heading);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.logo-sub {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--tint-red-text);
+  margin-top: 2px;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.nav-item:hover {
+  color: var(--text-body);
+  background: var(--nav-hover-bg);
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  color: white;
+  background: linear-gradient(135deg, var(--red), var(--red2));
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.25);
+  transform: none;
+}
+
+.nav-icon {
+  font-size: 18px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Sidebar User Profile */
+.sidebar-profile {
+  padding: 20px 16px;
+  border-top: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--red), var(--amber2));
+  color: white;
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.2);
+  flex-shrink: 0;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-heading);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.profile-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green2);
+  box-shadow: 0 0 6px var(--green2);
+}
+
+.profile-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.profile-btn:hover {
+  background: var(--surface-3);
+  border-color: var(--text-muted);
+}
+
+.profile-btn.logout {
+  background: var(--tint-red);
+  border-color: rgba(224, 82, 82, 0.2);
+  color: var(--red);
+}
+
+.profile-btn.logout:hover {
+  background: var(--red);
+  color: white;
+}
+
+.sidebar-footer {
+  padding: 16px 24px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 500;
+  background: var(--surface-2);
+  border-top: 1px solid var(--border-soft);
+}
+
+/* ─── MAIN LAYOUT CONTAINER ──────────────────────────────────── */
+.main-layout {
+  flex: 1;
+  /* No permanent margin — sidebar overlays content */
+  margin-left: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: margin-left var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Content Wrapper */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.page-container {
+  flex: 1;
+  width: 100%;
+}
+
+/* ─── INNER TOP BAR (Glassmorphism Header) ───────────────────── */
+.inner-top-bar {
+  height: var(--topbar-height);
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+
+.inner-menu-btn {
+  /* Always visible — sidebar is overlay-based on all sizes */
+  display: inline-flex;
+  background: transparent;
+  border: none;
+  color: var(--text-heading);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.inner-menu-btn:hover {
+  background: var(--nav-hover-bg);
+}
+
+.inner-page-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-heading);
+  font-family: 'Fraunces', serif;
+}
+
+.inner-user-pill, .hero-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  box-shadow: var(--shadow);
+}
+
+/* Hero elements overlay triggers */
+.hero-menu-btn {
+  /* Always visible — sidebar is overlay on all screen sizes */
+  display: inline-flex;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.hero-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.05);
+}
+
+.hero-user-pill {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: white;
+  box-shadow: none;
+}
+
+.hero-user-name {
+  color: white;
+}
+
+/* Sidebar Overlay — always active when sidebar is open */
+.sidebar-overlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 950;
+  animation: fadeIn 0.25s ease;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── RESPONSIVE STYLING ─────────────────────────────────────── */
+@media (max-width: 576px) {
+  .inner-user-pill, .hero-user-pill {
+    display: none;
+  }
+
+  .inner-top-bar {
+    padding: 0 16px;
+  }
+
+  .hero {
+    padding-top: 90px !important;
+  }
+}
+
+/* Lock sidebar on desktop viewports */
+@media (min-width: 1024px) {
+  /* .sidebar.open ~ .main-layout {
+    margin-left: var(--sidebar-width);
+  } */
+}

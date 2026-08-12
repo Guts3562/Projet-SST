@@ -1,0 +1,115 @@
+/* ==========================================
+   ACCUEIL — SST Tunisie
+   ========================================== */
+
+/* ─── SECTOR CARDS ────────────────────────────────────────────── */
+.sector-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 32px 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  text-align: center;
+  cursor: default;
+}
+
+.sector-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sector-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 18px;
+}
+
+.sector-icon.red   { background: var(--tint-red); }
+.sector-icon.amber { background: var(--tint-amber); }
+.sector-icon.blue  { background: var(--tint-blue); }
+
+.sector-card h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text-heading);
+  margin-bottom: 8px;
+}
+
+.sector-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-red   { background: var(--tint-red);   color: var(--tint-red-text); }
+.pill-amber { background: var(--tint-amber); color: var(--tint-amber-text); }
+.pill-green { background: var(--tint-green); color: var(--tint-green-text); }
+
+/* ─── CTA BANNER ──────────────────────────────────────────────── */
+.cta-banner {
+  background: linear-gradient(135deg, var(--red), #0D1B2A);
+  border-radius: var(--radius);
+  padding: 48px;
+  text-align: center;
+  color: white;
+  margin-top: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cta-banner h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.cta-banner p {
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sector-card {
+    padding: 22px 16px;
+  }
+  .sector-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+  .cta-banner {
+    padding: 30px 20px;
+  }
+  .cta-banner h3 {
+    font-size: 20px;
+  }
+}

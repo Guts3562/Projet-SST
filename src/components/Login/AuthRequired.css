@@ -1,0 +1,129 @@
+/* ═══════════════════════════════════════════════════════════════
+   SST Tunisie — AuthRequired.css
+   Authentification request cover layout
+   ═══════════════════════════════════════════════════════════════ */
+
+.auth-required-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px 80px;
+  width: 100%;
+}
+
+.auth-required-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 44px;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-required-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--red), var(--amber));
+}
+
+.auth-icon-large {
+  font-size: 54px;
+  margin-bottom: 20px;
+  display: inline-block;
+  filter: drop-shadow(0 4px 12px rgba(192, 57, 43, 0.2));
+}
+
+.auth-required-card h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-heading);
+  letter-spacing: -0.01em;
+}
+
+.auth-required-card p {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin-top: 10px;
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.auth-required-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.auth-required-actions .btn {
+  padding: 14px 28px;
+  font-size: 14.5px;
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.25);
+}
+
+/* Benefit items grid */
+.auth-features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+  border-top: 1px solid var(--border-soft);
+  padding-top: 28px;
+}
+
+.auth-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.auth-feature span {
+  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  box-shadow: var(--shadow);
+}
+
+.auth-feature p {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+@media (max-width: 576px) {
+  .auth-required-card {
+    padding: 28px 20px;
+  }
+  .auth-features-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .auth-feature {
+    flex-direction: row;
+    text-align: left;
+    gap: 14px;
+  }
+  .auth-feature span {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+}

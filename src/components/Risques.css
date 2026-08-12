@@ -1,0 +1,142 @@
+/* ==========================================
+   RISQUES — SST Tunisie
+   ========================================== */
+
+/* ─── RISK ACCORDION ──────────────────────────────────────────── */
+.risk-item {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.risk-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 28px;
+  cursor: pointer;
+}
+
+.risk-header:hover {
+  background: var(--surface-3);
+}
+
+.risk-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.risk-icon-wrap.red   { background: var(--tint-red); }
+.risk-icon-wrap.amber { background: var(--tint-amber); }
+.risk-icon-wrap.blue  { background: var(--tint-blue); }
+.risk-icon-wrap.green { background: var(--tint-green); }
+
+.risk-title {
+  flex: 1;
+}
+
+.risk-title h4 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  color: var(--text-heading);
+  font-size: 16px;
+}
+
+.risk-title p {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.risk-chevron {
+  transition: transform 0.3s;
+  color: var(--text-muted);
+  font-size: 20px;
+}
+
+.risk-item.open .risk-chevron {
+  transform: rotate(180deg);
+}
+
+.risk-body {
+  display: none;
+  padding: 0 28px 24px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.risk-item.open .risk-body {
+  display: block;
+}
+
+.risk-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.risk-col h5 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.risk-col.dangers h5    { color: var(--red); }
+.risk-col.prevention h5 { color: var(--green); }
+
+.risk-col ul {
+  list-style: none;
+}
+
+.risk-col li {
+  padding: 7px 0;
+  font-size: 14px;
+  color: var(--text-body);
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.risk-col li:last-child {
+  border-bottom: none;
+}
+
+.risk-col.dangers li::before {
+  content: '⚠';
+  font-size: 13px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.risk-col.prevention li::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .risk-cols {
+    grid-template-columns: 1fr;
+  }
+  .risk-header {
+    padding: 16px 18px;
+    gap: 12px;
+  }
+  .risk-body {
+    padding: 0 18px 18px;
+  }
+}

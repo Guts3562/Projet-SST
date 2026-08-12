@@ -1,0 +1,41 @@
+import React from "react";
+import sstLogo from "../../assets/sst-logo.png";
+import "./AuthRequired.css";
+
+const AuthRequired = ({ onLoginClick }) => {
+  return (
+    <div className="auth-required-container">
+      <div className="auth-required-card">
+        <div className="auth-icon-large">🔐</div>
+        <h2>Espace Membre Requis</h2>
+        <p>
+          Pour participer au Quiz SST et sauvegarder vos scores dans votre
+          dossier professionnel, vous devez être connecté à votre compte.
+        </p>
+
+        <div className="auth-required-actions">
+          <button className="btn btn-primary" onClick={onLoginClick}>
+            Se connecter / S'inscrire
+          </button>
+        </div>
+
+        <div className="auth-features-grid">
+          <div className="auth-feature">
+            <span>📊</span>
+            <p>Suivi des scores</p>
+          </div>
+          <div className="auth-feature">
+            <img src={sstLogo} alt="SST Logo" style={{ height: "24px", width: "auto", objectFit: "contain", marginBottom: "8px" }} />
+            <p>Attestations SST</p>
+          </div>
+          <div className="auth-feature">
+            <span>📈</span>
+            <p>Statistiques</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthRequired;

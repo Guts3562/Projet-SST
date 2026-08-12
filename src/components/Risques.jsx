@@ -1,30 +1,40 @@
-import React, { useState } from 'react'
-import { risks } from '../data'
+import React, { useState } from "react";
+import "./Risques.css";
+import { risks } from "../risks";
 
 function Risques() {
-  const [openRisks, setOpenRisks] = useState(new Set())
+  const [openRisks, setOpenRisks] = useState(new Set());
 
   const toggleRisk = (index) => {
-    const newOpen = new Set(openRisks)
+    const newOpen = new Set(openRisks);
     if (newOpen.has(index)) {
-      newOpen.delete(index)
+      newOpen.delete(index);
     } else {
-      newOpen.add(index)
+      newOpen.add(index);
     }
-    setOpenRisks(newOpen)
-  }
+    setOpenRisks(newOpen);
+  };
 
   return (
     <div id="situations" className="page active">
       <div className="section-header">
-      <span className="section-label">Risques professionnels</span>
-      <h2>Situations à risque spécifiques<br/>à la Tunisie</h2>
-      <p>Cliquez sur chaque catégorie pour voir les dangers détaillés et les mesures de prévention adaptées.</p>
+        <span className="section-label">Risques professionnels</span>
+        <h2>
+          Situations à risque spécifiques
+          <br />à la Tunisie
+        </h2>
+        <p>
+          Cliquez sur chaque catégorie pour voir les dangers détaillés et les
+          mesures de prévention adaptées.
+        </p>
       </div>
 
       <div id="riskList">
         {risks.map((risk, index) => (
-          <div key={index} className={`risk-item ${openRisks.has(index) ? 'open' : ''}`}>
+          <div
+            key={index}
+            className={`risk-item ${openRisks.has(index) ? "open" : ""}`}
+          >
             <div className="risk-header" onClick={() => toggleRisk(index)}>
               <div className={`risk-icon-wrap ${risk.color}`}>{risk.icon}</div>
               <div className="risk-title">
@@ -57,7 +67,7 @@ function Risques() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default Risques
+export default Risques;
