@@ -1,4 +1,4 @@
--- Create users table
+﻿-- Create users table
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
@@ -56,5 +56,50 @@ INSERT INTO questions (text, options, correct, category) VALUES
 ('Quelle norme tunisienne régit l''utilisation des casques de protection individuelle sur les chantiers du BTP ?', ARRAY['NT 09.01', 'NT 09.02', 'NT 09.08', 'NT 09.12'], 1, 'EPI'),
 ('Pour contacter le SAMU (secours médicaux d''urgence) en Tunisie, quel numéro composez-vous ?', ARRAY['190', '198', '197', '193'], 0, 'Urgences'),
 ('En cas d''exposition à la poussière de ciment ou de silice, quel type de masque est préconisé par la prévention ?', ARRAY['Masque chirurgical simple', 'Masque FFP2 ou FFP3 adapté', 'Masque anti-gaz lourd', 'Visière transparente de protection'], 1, 'EPI'),
-('Quel principe de prévention des risques professionnels consiste à éliminer la source du danger ?', ARRAY['Fournir des EPI', 'Éviter les risques à la source', 'Adapter le travail à l''homme', 'Former les secouristes'], 1, 'Prévention')
+('Quel principe de prévention des risques professionnels consiste à éliminer la source du danger ?', ARRAY['Fournir des EPI', 'Éviter les risques à la source', 'Adapter le travail à l''homme', 'Former les secouristes'], 1, 'Prévention'),
+('Quel est le numéro de la Protection Civile en Tunisie (pompiers + secours médicaux) ?', ARRAY['190','197','198','193'], 2, 'Urgences'),
+('Selon la loi tunisienne, quel délai maximum l''employeur a-t-il pour déclarer un accident du travail à la CNSS ?', ARRAY['24 heures','48 heures','72 heures','7 jours ouvrables'], 1, 'Législation'),
+('Quel EPI est obligatoire pour les travaux en hauteur (>2m) sur les chantiers tunisiens ?', ARRAY['Un simple casque de chantier','Un gilet de signalisation jaune','Un harnais de sécurité avec point d''ancrage certifié NT 09.12','Des gants anti-coupure'], 2, 'EPI'),
+('Quel organisme est chargé de la gestion des risques professionnels en Tunisie ?', ARRAY['Le ministère de la Santé','La CNSS — Caisse Nationale de Sécurité Sociale','L''UTICA','La Banque Centrale de Tunisie'], 1, 'Institutions'),
+('Que signifie le sigle SST dans le contexte professionnel tunisien ?', ARRAY['Sécurité et Sauvetage au Travail','Sauveteur Secouriste du Travail','Service Santé Travail','Sécurité Systématique au Travail'], 1, 'Formation'),
+('Selon les statistiques tunisiennes, quel secteur concentre le plus d''accidents du travail ?', ARRAY['Le secteur textile','L''agriculture','Le BTP — Bâtiment et Travaux Publics','Le secteur tertiaire (services)'], 2, 'Statistiques'),
+('Quel numéro composer en cas d''intoxication chimique ou médicamenteuse en Tunisie ?', ARRAY['190','198','71 335 500','55 590 228'], 2, 'Urgences'),
+('Quelle procédure doit être appliquée avant toute intervention de maintenance sur une machine industrielle ?', ARRAY['Prévenir l''équipe et continuer','La procédure de consignation-déconsignation (LOTO)','Éteindre uniquement l''interrupteur principal','Poser une affiche d''avertissement'], 1, 'Prévention'),
+('À quelle fréquence minimale les exercices d''évacuation incendie sont-ils obligatoires en Tunisie ?', ARRAY['Une fois tous les 2 ans','Une fois par an minimum','Tous les 6 mois obligatoirement','Uniquement lors de la création de l''entreprise'], 1, 'Législation'),
+('Selon les normes tunisiennes, à partir de quel niveau sonore les protections auditives deviennent-elles obligatoires ?', ARRAY['À partir de 70 dB','À partir de 80 dB','À partir de 85 dB','À partir de 100 dB'], 2, 'EPI'),
+('Que doit contenir obligatoirement un poste de travail exposé à des produits chimiques dangereux en Tunisie ?', ARRAY['Un extincteur CO2 uniquement','Une Fiche de Données de Sécurité (FDS) accessible','Un registre d''entrée et de sortie','Une caméra de surveillance'], 1, 'Prévention'),
+('Quelle loi constitue la base du Code du Travail tunisien ?', ARRAY['Loi n°66-27 du 30 avril 1966','Décret n°2000-389','Loi n°94-28 du 21 février 1994','Décret n°2001-641'], 0, 'Législation'),
+('Quelle maladie professionnelle respiratoire est fréquente dans les cimenteries et carrières tunisiennes ?', ARRAY['L''asthme allergique','La silicose','La légionellose','La bronchite chronique obstructive liée au tabac'], 1, 'Risques'),
+('Quel numéro appeler pour un secours en mer en Tunisie ?', ARRAY['190','193','194','198'], 2, 'Urgences'),
+('Quel type de masque est recommandé pour travailler avec des produits phytosanitaires (pesticides) en agriculture ?', ARRAY['Un masque chirurgical jetable','Un masque FFP1 simple','Un masque FFP2 ou FFP3 avec filtre adapté','Un simple foulard en tissu'], 2, 'EPI'),
+('Qui est responsable de la mise en place des mesures de sécurité au travail dans une entreprise tunisienne ?', ARRAY['Le salarié lui-même uniquement','L''employeur, avec le concours du CHSCT','Le médecin du travail exclusivement','L''inspection du travail'], 1, 'Prévention'),
+('Quel organisme délivre l''agrément officiel pour les formations SST (Sauveteur Secouriste du Travail) en Tunisie ?', ARRAY['Le ministère de l''Éducation Nationale','La CNSS en partenariat avec le ministère des Affaires Sociales','L''UGTT exclusivement','L''UTICA'], 1, 'Formation'),
+('Dans le secteur du BTP en Tunisie, quelle est la distance minimale de sécurité à respecter par rapport à une ligne électrique aérienne de haute tension lors des travaux ?', ARRAY['1 mètre','3 mètres','5 mètres','10 mètres'], 2, 'Risques'),
+('Dans une entreprise tunisienne de plus de 40 salariés, quel organe est obligatoire pour la gestion de la sécurité ?', ARRAY['Un délégué syndical uniquement','Le CHSCT — Comité d''Hygiène, de Sécurité et des Conditions de Travail','Un service de sécurité externalisé','Un agent de sécurité incendie'], 1, 'Législation'),
+('Quelle est la première action à effectuer face à un collègue victime d''un arrêt cardiaque au travail ?', ARRAY['Appeler immédiatement la famille','Alerter les secours (190/198) et commencer la RCP si formé','Lui donner de l''eau et attendre','Le déplacer immédiatement vers un endroit plus confortable'], 1, 'Prévention'),
+('Qu''est-ce qu''un "triangle du feu" en matière de prévention incendie ?', ARRAY['Un panneau de signalisation triangulaire d''alerte incendie','Les trois éléments nécessaires à la combustion : combustible, comburant et énergie d''activation','Le nom d''un extincteur à usage professionnel','Une procédure d''évacuation en triangle'], 1, 'Prévention')
+ON CONFLICT (id) DO NOTHING;
+
+-- Seed demo users
+INSERT INTO users (id, email, password_hash, created_at) VALUES
+(1, 'mr.hafyen@gmail.com', '$2a$10$LwN5f3NuO1rZu.IgjwO.h.9cTm714hmd/C5E/y3JH8bIqS5zBYcAa', '2026-05-01 20:44:00.347473+01'),
+(2, 'louayhafyen1@gmail.com', '$2a$10$HjIZYPxa30z7QqDvxGUNNee0mRCaWL9MB3TpRd3d5J1fUyqB6O0X.', '2026-05-02 07:09:27.80955+01')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO profiles (id, email, full_name, role, company, phone) VALUES
+(1, 'mr.hafyen@gmail.com', 'Louay', 'student', NULL, NULL),
+(2, 'louayhafyen1@gmail.com', 'EL HAFYEN Louây', 'student', NULL, NULL)
+ON CONFLICT (id) DO NOTHING;
+
+-- Seed demo quiz results
+INSERT INTO quiz_results (user_id, noun, role, score, total, created_at) VALUES
+(1, 'Louay', 'student', 2, 10, '2026-05-01 21:06:37.420685+01'),
+(1, 'Louay', 'student', 5, 10, '2026-05-01 21:28:54.314883+01'),
+(1, 'Louay', 'student', 4, 10, '2026-05-23 19:18:14.901096+01'),
+(1, 'Louay', 'student', 3, 10, '2026-06-12 18:59:01.2172+01')
 ON CONFLICT DO NOTHING;
+
+-- Fix sequences
+SELECT pg_catalog.setval('public.users_id_seq', (SELECT MAX(id) FROM public.users), true);
+SELECT pg_catalog.setval('public.quiz_results_id_seq', (SELECT MAX(id) FROM public.quiz_results), true);
+SELECT pg_catalog.setval('public.questions_id_seq', (SELECT MAX(id) FROM public.questions), true);

@@ -14,7 +14,7 @@ const pool = new Pool({
 });
 
 // Test the connection
-pool.query('SELECT NOW()', (err, res) => {
+pool.query('SELECT NOW()', (err) => {
   if (err) {
     console.error('❌ Database connection error:', err.message);
     console.error('Make sure PostgreSQL is running and credentials in server/.env are correct.');

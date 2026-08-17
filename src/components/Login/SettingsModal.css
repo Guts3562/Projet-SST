@@ -6,7 +6,28 @@
 /* Modal content customization */
 .settings-modal-premium {
   max-width: 580px !important;
+  max-height: 90vh;
+  overflow-y: auto;
   animation: slideDownModal 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Custom scrollbar for settings modal */
+.settings-modal-premium::-webkit-scrollbar {
+  width: 6px;
+}
+.settings-modal-premium::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+.settings-modal-premium::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+.settings-modal-premium::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+.settings-modal-premium::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Header customization */
@@ -19,17 +40,18 @@
 }
 
 .settings-icon-wrapper {
-  width: 54px;
-  height: 54px;
-  border-radius: 14px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   background: var(--tint-red);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  margin-bottom: 12px;
+  font-size: 24px;
+  margin-bottom: 14px;
   color: var(--red);
-  box-shadow: 0 4px 10px rgba(192, 57, 43, 0.15);
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .settings-header h2 {
@@ -37,6 +59,7 @@
   font-size: 22px;
   font-weight: 800;
   color: var(--text-heading);
+  letter-spacing: -0.01em;
 }
 
 .settings-header p {
@@ -52,6 +75,7 @@
   font-size: 13.5px;
   font-weight: 600;
   margin-bottom: 20px;
+  animation: fadeInModal 0.3s ease;
 }
 
 .settings-alert.success {
@@ -64,6 +88,82 @@
   background: var(--tint-red);
   color: var(--tint-red-text);
   border: 1px solid rgba(192, 57, 43, 0.15);
+}
+
+/* Theme Section */
+.settings-theme-section {
+  margin-bottom: 8px;
+  padding: 20px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.settings-theme-section h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 14px;
+}
+
+.theme-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.theme-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+.theme-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.theme-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  user-select: none;
+}
+
+.theme-radio:hover {
+  border-color: var(--text-muted);
+  color: var(--text-body);
+  background: var(--surface-2);
+}
+
+.theme-radio.selected {
+  border-color: var(--red);
+  background: var(--tint-red);
+  color: var(--tint-red-text);
+  box-shadow: 0 2px 8px rgba(192,57,43,0.15);
+}
+
+.theme-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 /* Form Sections */
@@ -115,6 +215,7 @@
   left: 14px;
   font-size: 16px;
   color: var(--text-muted);
+  z-index: 1;
 }
 
 .settings-input-wrapper input,
@@ -122,12 +223,12 @@
   width: 100%;
   padding: 12px 16px 12px 42px;
   background: var(--surface-2);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-body);
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
   outline: none;
 }
 
@@ -136,6 +237,7 @@
   background: var(--surface);
   border-color: var(--red);
   box-shadow: 0 0 0 3px var(--tint-red);
+  transform: translateY(-1px);
 }
 
 /* Disabled styling */
@@ -146,13 +248,17 @@
   border-style: dashed;
 }
 
+.disabled-group label {
+  color: var(--text-muted);
+}
+
 /* Phone selection input wrapper */
 .phone-wrapper {
   display: flex;
   background: var(--surface-2);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.34,1,56,0.64,1);
 }
 
 .phone-wrapper:focus-within {
@@ -192,6 +298,11 @@
   font-size: 13.5px;
   font-weight: 600;
   color: var(--text-heading);
+  transition: background 0.2s ease;
+}
+
+.custom-country-select:hover .ccs-trigger {
+  background: var(--surface-3);
 }
 
 .ccs-arrow {
@@ -217,6 +328,7 @@
   box-shadow: var(--shadow-lg);
   z-index: 100;
   padding: 4px;
+  animation: fadeInModal 0.2s ease;
 }
 
 .ccs-option {
@@ -226,7 +338,8 @@
   padding: 10px 12px;
   border-radius: 6px;
   font-size: 13px;
-  transition: background 0.15s;
+  transition: all 0.15s ease;
+  cursor: pointer;
 }
 
 .ccs-option:hover {
@@ -272,12 +385,13 @@
   font-weight: 600;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
 }
 
 .btn-settings-cancel:hover {
   background: var(--surface-3);
   color: var(--text-heading);
+  border-color: var(--text-muted);
 }
 
 .btn-settings-save {
@@ -294,12 +408,17 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(192, 57, 43, 0.25);
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
 }
 
-.btn-settings-save:hover {
+.btn-settings-save:hover:not(:disabled) {
   filter: brightness(1.1);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(192, 57, 43, 0.35);
+}
+
+.btn-settings-save:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .btn-settings-save:disabled {
@@ -329,4 +448,14 @@
   color: var(--text-muted);
   font-weight: 500;
   margin-top: 24px;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDownModal {
+  from { transform: translateY(-30px) scale(0.95); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
 }

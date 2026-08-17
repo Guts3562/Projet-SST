@@ -1,11 +1,6 @@
 import React from "react";
 import "./Accueil.css";
 import knowledgeIcon from "../assets/knowledge-icon.png";
-import constructionIcon from "../../Ressources/construction_4423686.png";
-import tractorIcon from "../../Ressources/tractor_15871104.png";
-import industryIcon from "../../Ressources/money_10215454.png";
-import referencesIcon from "../../Ressources/Références Législatives.png";
-import objectivesIcon from "../../Ressources/Objectifs de Sensibilisation.png";
 
 function Accueil({ onTabChange }) {
   return (
@@ -19,24 +14,24 @@ function Accueil({ onTabChange }) {
       </div>
 
       <div className="grid-3" style={{ marginBottom: "40px" }}>
-        <div className="sector-card">
-          <div className="sector-icon red"><img src={constructionIcon} alt="BTP" style={{ width: "36px", height: "36px", objectFit: "contain" }} /></div>
+        <div className="sector-card red-card">
+          <div className="sector-icon red"><i className="bi bi-buildings"></i></div>
           <h4>Bâtiment &amp; Travaux Publics (BTP)</h4>
           <p>
             Premier secteur accidentogène en Tunisie, concentrant près de 35% des sinistres déclarés. Vigilance accrue requise sur les chantiers.
           </p>
           <span className="pill pill-red">Risque Critique</span>
         </div>
-        <div className="sector-card">
-          <div className="sector-icon amber"><img src={tractorIcon} alt="Agriculture" style={{ width: "36px", height: "36px", objectFit: "contain" }} /></div>
+        <div className="sector-card amber-card">
+          <div className="sector-icon amber"><i className="bi bi-tree"></i></div>
           <h4>Secteur Agricole</h4>
           <p>
             Risques spécifiques liés à la manipulation des machines agricoles et expositions toxicologiques sévères aux produits phytosanitaires.
           </p>
           <span className="pill pill-amber">Sensibilisation Impérative</span>
         </div>
-        <div className="sector-card">
-          <div className="sector-icon blue"><img src={industryIcon} alt="Industrie" style={{ width: "36px", height: "36px", objectFit: "contain" }} /></div>
+        <div className="sector-card blue-card">
+          <div className="sector-icon blue"><i className="bi bi-gear"></i></div>
           <h4>Activités Industrielles</h4>
           <p>
             Nuisances acoustiques majeures, risques de coupures ou d'amputation sur machines rotatives et risques chimiques diffus.
@@ -47,7 +42,7 @@ function Accueil({ onTabChange }) {
 
       <div className="grid-2" style={{ marginBottom: "40px" }}>
         <div className="card success">
-          <h3><img src={referencesIcon} alt="Références" style={{ width: "24px", height: "24px", objectFit: "contain", marginRight: "8px" }} /> Références Législatives</h3>
+          <h3><i className="bi bi-journal-text"></i> Références Législatives</h3>
           <ul>
             <li>Loi Organique &amp; Code du Travail (Loi n°66-27 du 30 avril 1966 et ses amendements)</li>
             <li>Décret n°2000-389 (Réglementation des comités de santé et sécurité au travail)</li>
@@ -56,7 +51,7 @@ function Accueil({ onTabChange }) {
           </ul>
         </div>
         <div className="card info">
-          <h3><img src={objectivesIcon} alt="Objectifs" style={{ width: "24px", height: "24px", objectFit: "contain", marginRight: "8px" }} /> Objectifs de Sensibilisation</h3>
+          <h3><i className="bi bi-bullseye"></i> Objectifs de Sensibilisation</h3>
           <ul>
             <li>Cartographier et analyser les situations de travail à risques majeurs.</li>
             <li>Appliquer les mesures techniques de protection collective (EPC) et individuelle (EPI).</li>
@@ -68,15 +63,15 @@ function Accueil({ onTabChange }) {
       </div>
 
       <div className="cta-banner">
-        <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "12px" }}>
-          <img src={knowledgeIcon} alt="Évaluation" style={{ height: "32px", width: "auto", objectFit: "contain" }} />
-          Évaluation des Connaissances
-        </h3>
-        <p>
-          Mesurez votre niveau de conformité et testez vos connaissances pratiques sur la réglementation SST en Tunisie à travers un diagnostic rapide de 10 questions.
+        <div className="cta-banner-icon">
+          <img src={knowledgeIcon} alt="Évaluation" />
+        </div>
+        <h3 className="cta-banner-title">Quiz SST : Évaluez vos connaissances</h3>
+        <p className="cta-banner-text">
+          10 questions pour tester votre maîtrise de la réglementation tunisienne en santé et sécurité au travail.
         </p>
-        <button className="btn btn-amber" onClick={() => onTabChange("quiz")}>
-          Démarrer le diagnostic SST →
+        <button className="btn btn-amber cta-banner-btn" onClick={() => onTabChange("quiz")}>
+          Commencer le quiz <i className="bi bi-arrow-right"></i>
         </button>
       </div>
     </div>

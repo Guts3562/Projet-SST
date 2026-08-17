@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 22px 28px;
+  padding:20px 24px;
   cursor: pointer;
 }
 
@@ -25,14 +25,18 @@
 }
 
 .risk-icon-wrap {
-  width: 44px;
-  height: 44px;
+  width:46px; height:46px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
   flex-shrink: 0;
+}
+
+.risk-icon-wrap i {
+  font-size: 22px;
+  line-height: 1;
 }
 
 .risk-icon-wrap.red   { background: var(--tint-red); }
@@ -113,18 +117,18 @@
   border-bottom: none;
 }
 
-.risk-col.dangers li::before {
-  content: '⚠';
+.list-icon {
   font-size: 13px;
   margin-top: 1px;
   flex-shrink: 0;
 }
 
-.risk-col.prevention li::before {
-  content: '✓';
+.risk-col.dangers .list-icon {
+  color: var(--red);
+}
+
+.risk-col.prevention .list-icon {
   color: var(--green);
-  font-weight: 700;
-  flex-shrink: 0;
 }
 
 /* ─── RESPONSIVE ──────────────────────────────────────────────── */
@@ -140,3 +144,4 @@
     padding: 0 18px 18px;
   }
 }
+

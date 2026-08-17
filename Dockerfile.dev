@@ -1,7 +1,7 @@
 FROM node:20-alpine
 
 # Install system dependencies that might be required
-RUN apk add --no-cache git python3 make g++
+RUN apk add --no-cache git python3 py3-setuptools make g++
 
 WORKDIR /app
 
@@ -16,8 +16,8 @@ RUN cd server && npm install
 # Copy all project files
 COPY . .
 
-# Expose Vite, Express backend, and n8n ports
-EXPOSE 5173 5000 5678
+# Expose Vite frontend and Express backend ports
+EXPOSE 5173 5000
 
-# Run the concurrent dev script
-CMD ["npm", "run", "dev"]
+# Run the dev server (Vite + Express backend)
+CMD ["npm", "run", "start:docker"]

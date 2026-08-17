@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
@@ -16,6 +14,11 @@ services:
       - ./db-init:/docker-entrypoint-initdb.d
     networks:
       - sst-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
 
   app:
     build:
@@ -24,9 +27,8 @@ services:
     container_name: sst-app
     restart: always
     ports:
-      - "5173:5173" # Vite Frontend
-      - "5000:5000" # Express Backend
-      - "5678:5678" # n8n
+      - "5173:5173"
+      - "5000:5000"
     volumes:
       - .:/app
       - /app/node_modules
@@ -41,11 +43,10 @@ services:
       - DB_PORT=5432
       - JWT_SECRET=a3f8c2e1d9b74f6a0c5e2d8b1f4a7c3e6d9b2f5a8c1e4d7b0f3a6c9e2d5b8f1a4
       - REFRESH_SECRET=b7e2f5a8c1d4g7b0f3a6c9e2d5b8f1a4b7e2f5a8c1d4g7h0i3j6k9l2m5n8o1p4
-      - N8N_WEBHOOK_URL=https://louayhafyen.app.n8n.cloud/webhook/sst-chatbot
-      - N8N_HOST=0.0.0.0
-      - N8N_PORT=5678
+      - CLIENT_ORIGIN=http://localhost:5173
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - sst-network
 

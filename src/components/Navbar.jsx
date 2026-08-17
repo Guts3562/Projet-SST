@@ -1,7 +1,5 @@
 import React from "react";
 import "./Navbar.css";
-import settingsIcon from "../assets/settings-icon.png";
-import logoutIcon from "../assets/logout-icon.png";
 import sstLogo from "../assets/sst-logo.png";
 
 const Navbar = ({
@@ -25,7 +23,7 @@ const Navbar = ({
             onClick={onMenuClick}
             title="Menu principal"
           >
-            ☰
+            <i className="bi bi-list"></i>
           </button>
 
           <div className="navbar-logo">
@@ -41,7 +39,7 @@ const Navbar = ({
           {user ? (
             <div className="user-nav">
               <span className="user-name">
-                👤 <span className="name-text">{firstName}</span>
+                <i className="bi bi-person"></i> <span className="name-text">{firstName}</span>
               </span>
 
               <button
@@ -49,7 +47,7 @@ const Navbar = ({
                 onClick={onSettingsClick}
                 title="Paramètres"
               >
-                <span className="btn-icon"><img src={settingsIcon} alt="Paramètres" style={{ width: "16px", height: "16px", objectFit: "contain", verticalAlign: "middle" }} /></span>
+                <span className="btn-icon"><i className="bi bi-gear"></i></span>
                 <span className="btn-text">Paramètres</span>
               </button>
 
@@ -58,13 +56,13 @@ const Navbar = ({
                 onClick={onLogoutClick}
                 title="Déconnexion"
               >
-                <span className="btn-icon"><img src={logoutIcon} alt="Déconnexion" style={{ width: "16px", height: "16px", objectFit: "contain", verticalAlign: "middle" }} /></span>
+                <span className="btn-icon"><i className="bi bi-box-arrow-right"></i></span>
                 <span className="btn-text">Déconnexion</span>
               </button>
             </div>
           ) : (
             <button className="btn btn-login-nav" onClick={onLoginClick}>
-              <span className="btn-icon">👤</span>
+              <span className="btn-icon"><i className="bi bi-person"></i></span>
               <span className="btn-text">Connexion</span>
             </button>
           )}

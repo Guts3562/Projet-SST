@@ -7,8 +7,6 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const [view, setView] = useState("login"); // 'login' | 'register' | 'forgot' | 'reset'
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("worker");
   const [successMsg, setSuccessMsg] = useState("");
@@ -85,7 +83,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const renderLoginForm = () => (
     <>
       <div className="login-header">
-        <div className="login-logo">🔐</div>
+        <div className="login-logo"><i className="bi bi-lock-fill"></i></div>
         <h2>Connexion</h2>
         <p>Accédez à votre espace sécurisé SST</p>
       </div>
@@ -97,7 +95,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         <div className="input-group">
           <label htmlFor="email">Adresse Email</label>
           <div className="input-wrapper">
-            <span className="input-icon">✉️</span>
+              <span className="input-icon"><i className="bi bi-envelope"></i></span>
             <input
               type="email"
               id="email"
@@ -121,7 +119,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
             </button>
           </div>
           <div className="input-wrapper">
-            <span className="input-icon">🔒</span>
+              <span className="input-icon"><i className="bi bi-lock"></i></span>
             <input
               type="password"
               id="password"
@@ -160,7 +158,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const renderRegisterForm = () => (
     <>
       <div className="login-header">
-        <div className="login-logo">📝</div>
+        <div className="login-logo"><i className="bi bi-pencil"></i></div>
         <h2>S'inscrire</h2>
         <p>Rejoignez la plateforme de prévention SST</p>
       </div>
@@ -173,7 +171,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
           <div className="input-group">
             <label htmlFor="name">Nom complet</label>
             <div className="input-wrapper">
-              <span className="input-icon">👤</span>
+              <span className="input-icon"><i className="bi bi-person"></i></span>
               <input
                 type="text"
                 id="name"
@@ -188,7 +186,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
           <div className="input-group">
             <label htmlFor="email">Adresse Email</label>
             <div className="input-wrapper">
-              <span className="input-icon">✉️</span>
+              <span className="input-icon"><i className="bi bi-envelope"></i></span>
               <input
                 type="email"
                 id="email"
@@ -203,7 +201,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
           <div className="input-group">
             <label htmlFor="role">Votre rôle</label>
             <div className="input-wrapper">
-              <span className="input-icon">💼</span>
+              <span className="input-icon"><i className="bi bi-briefcase"></i></span>
               <select
                 id="role"
                 value={role}
@@ -221,7 +219,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
           <div className="input-group">
             <label htmlFor="password">Mot de passe</label>
             <div className="input-wrapper">
-              <span className="input-icon">🔒</span>
+              <span className="input-icon"><i className="bi bi-lock"></i></span>
               <input
                 type="password"
                 id="password"
@@ -261,7 +259,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const renderForgotForm = () => (
     <>
       <div className="login-header">
-        <div className="login-logo">🔑</div>
+        <div className="login-logo"><i className="bi bi-key"></i></div>
         <h2>Récupération</h2>
         <p>Entrez votre email pour réinitialiser votre mot de passe</p>
       </div>
@@ -273,7 +271,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
         <div className="input-group">
           <label htmlFor="email">Adresse Email</label>
           <div className="input-wrapper">
-            <span className="input-icon">✉️</span>
+              <span className="input-icon"><i className="bi bi-envelope"></i></span>
             <input
               type="email"
               id="email"
@@ -300,7 +298,7 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
           className="footer-link"
           onClick={() => setView("login")}
         >
-          ← Retour à la connexion
+          <i className="bi bi-arrow-left"></i> Retour à la connexion
         </button>
       </div>
     </>

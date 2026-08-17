@@ -1,12 +1,4 @@
 import { useState } from "react";
-import accueilIcon from "./assets/accueil-icon.png";
-import risquesIcon from "./assets/risques-icon.png";
-import quizIcon from "./assets/quiz-icon.png";
-import chatbotIcon from "./assets/chatbot-icon.png";
-import guideIcon from "./assets/guide-icon.png";
-import ressourcesIcon from "./assets/ressources-icon.png";
-import settingsIcon from "./assets/settings-icon.png";
-import logoutIcon from "./assets/logout-icon.png";
 import sstLogo from "./assets/sst-logo.png";
 import "./style.css";
 import "./layout.css";
@@ -21,6 +13,15 @@ import LoginModal from "./components/Login/LoginModal";
 import AuthRequired from "./components/Login/AuthRequired";
 import LogoutConfirmModal from "./components/Login/LogoutConfirmModal";
 import SettingsModal from "./components/Login/SettingsModal";
+
+const NAV_ICONS = {
+  accueil: "bi bi-house",
+  situations: "bi bi-exclamation-triangle",
+  quiz: "bi bi-patch-question",
+  chatbot: "bi bi-robot",
+  guide: "bi bi-journal-text",
+  ressources: "bi bi-folder2-open",
+};
 
 // Hamburger icon as clean SVG lines
 const HamburgerIcon = () => (
@@ -81,16 +82,16 @@ const TunisianFlag = () => (
 
 // Page title map for inner-page top bar
 const PAGE_TITLES = {
-  accueil: null, // handled by hero
-  situations: { img: risquesIcon,   label: "Risques Professionnels" },
-  quiz:       { img: quizIcon,      label: "Quiz SST" },
-  chatbot:    { img: chatbotIcon,   label: "Assistant IA" },
-  guide:      { img: guideIcon,     label: "Guide Pratique" },
-  ressources: { img: ressourcesIcon, label: "Ressources & Liens" },
+  accueil: null,
+  situations: { icon: "bi bi-exclamation-triangle", label: "Risques Professionnels" },
+  quiz:       { icon: "bi bi-patch-question",     label: "Quiz SST" },
+  chatbot:    { icon: "bi bi-robot",              label: "Assistant IA" },
+  guide:      { icon: "bi bi-journal-text",       label: "Guide Pratique" },
+  ressources: { icon: "bi bi-folder2-open",       label: "Ressources & Liens" },
 };
 
 function App() {
-  const { user, profile, isLoading, login, register, logout, refreshProfile } = useAuth();
+  const { user, profile, isLoading, logout, refreshProfile } = useAuth();
 
   const [activeTab, setActiveTab] = useState("accueil");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -109,12 +110,12 @@ function App() {
   };
 
   const navItems = [
-    { id: "accueil",    label: "Accueil",    img: accueilIcon },
-    { id: "situations", label: "Risques",     img: risquesIcon },
-    { id: "quiz",       label: "Quiz SST",    img: quizIcon },
-    { id: "chatbot",    label: "Assistant",   img: chatbotIcon },
-    { id: "guide",      label: "Guide",       img: guideIcon },
-    { id: "ressources", label: "Ressources",  img: ressourcesIcon },
+    { id: "accueil",    label: "Accueil",    icon: NAV_ICONS.accueil },
+    { id: "situations", label: "Risques",     icon: NAV_ICONS.situations },
+    { id: "quiz",       label: "Quiz SST",    icon: NAV_ICONS.quiz },
+    { id: "chatbot",    label: "Assistant",   icon: NAV_ICONS.chatbot },
+    { id: "guide",      label: "Guide",       icon: NAV_ICONS.guide },
+    { id: "ressources", label: "Ressources",  icon: NAV_ICONS.ressources },
   ];
 
   const renderPage = () => {
@@ -199,11 +200,7 @@ function App() {
               }}
             >
               <span className="nav-icon">
-                {item.img ? (
-                  <img src={item.img} alt={item.label} style={{ width: "22px", height: "22px", objectFit: "contain", display: "block" }} />
-                ) : (
-                  item.icon
-                )}
+                <i className={item.icon}></i>
               </span>
               <span className="nav-label">{item.label}</span>
             </button>
@@ -231,14 +228,14 @@ function App() {
                 onClick={() => setIsSettingsModalOpen(true)}
                 title="Paramètres"
               >
-                <img src={settingsIcon} alt="Paramètres" style={{ width: "20px", height: "20px", objectFit: "contain" }} />
+                <i className="bi bi-gear"></i>
               </button>
               <button
                 className="profile-btn logout"
                 onClick={() => setIsLogoutModalOpen(true)}
                 title="Déconnexion"
               >
-                <img src={logoutIcon} alt="Déconnexion" style={{ width: "20px", height: "20px", objectFit: "contain" }} />
+                <i className="bi bi-box-arrow-right"></i>
               </button>
             </div>
           </div>
@@ -277,7 +274,7 @@ function App() {
             {/* User pill floats over the hero (top-right) */}
             {user && (
               <div className="hero-user-pill">
-                <span>👋</span>
+                <i className="bi bi-hand"></i>
                 <span className="hero-user-name">
                   Bonjour, {fullName?.split(" ")[0]}
                 </span>
@@ -332,8 +329,8 @@ function App() {
             </button>
             {pageInfo && (
               <div className="inner-page-title">
-                {pageInfo.img ? (
-                  <img src={pageInfo.img} alt={pageInfo.label} style={{ width: "22px", height: "22px", objectFit: "contain" }} />
+                {pageInfo.icon ? (
+                  <i className={pageInfo.icon}></i>
                 ) : (
                   <span>{pageInfo.icon}</span>
                 )}
@@ -342,7 +339,7 @@ function App() {
             )}
             {user && (
               <div className="inner-user-pill">
-                <span>👤</span>
+                <i className="bi bi-person"></i>
                 <span className="inner-user-name">
                   {fullName?.split(" ")[0]}
                 </span>

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./SettingsModal.css";
 import { api } from "../../lib/api";
 import { countryCodes } from "../../utils/countryCodes";
-import settingsIcon from "../../assets/settings-icon.png";
 
 const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
   const [name, setName] = useState("");
@@ -15,7 +14,33 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Prevent background scrolling when modal is open
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("theme");
+      if (stored === "dark" || stored === "light" || stored === "system") {
+        return stored;
+      }
+      return "system";
+    }
+    return "system";
+  });
+
+  const applyTheme = (selected) => {
+    const root = document.documentElement;
+    root.classList.remove("dark-mode", "light-mode");
+    if (selected === "dark") {
+      root.classList.add("dark-mode");
+    } else if (selected === "light") {
+      root.classList.add("light-mode");
+    }
+    localStorage.setItem("theme", selected);
+    setTheme(selected);
+  };
+
+  const handleThemeChange = (e) => {
+    applyTheme(e.target.value);
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -64,7 +89,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
   // Custom Flag component that translates emojis to flagcdn images for Windows compatibility
   const Flag = ({ emoji }) => {
     if (!emoji || emoji === "🌐")
-      return <span style={{ fontSize: "18px" }}>🌐</span>;
+      return <span style={{ fontSize: "18px" }}><i className="bi bi-globe"></i></span>;
     try {
       const char1 = emoji.codePointAt(0) - 127397;
       const char2 = emoji.codePointAt(2) - 127397;
@@ -84,8 +109,8 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
           />
         );
       }
-    } catch (e) {}
-    return <span style={{ fontSize: "18px" }}>{emoji}</span>;
+    } catch { /* ignore */ }
+    return <span style={{ fontSize: "18px" }}><i className="bi bi-flag"></i></span>;
   };
 
   const handleUpdate = async (e) => {
@@ -131,7 +156,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
 
         <div className="settings-header">
           <div className="settings-icon-wrapper">
-            <span className="settings-icon-emoji"><img src={settingsIcon} alt="Paramètres" style={{ width: "24px", height: "24px", objectFit: "contain" }} /></span>
+            <i className="bi bi-gear"></i>
           </div>
           <h2>Paramètres du compte</h2>
           <p>Gérez vos informations personnelles et votre rôle</p>
@@ -139,10 +164,51 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
 
         {success && (
           <div className="settings-alert success">
-            ✅ Profil mis à jour avec succès !
+            <i className="bi bi-check-circle-fill"></i> Profil mis à jour avec succès !
           </div>
         )}
-        {error && <div className="settings-alert error">❌ {error}</div>}
+        {error && <div className="settings-alert error"><i className="bi bi-x-circle-fill"></i> {error}</div>}
+
+        <div className="settings-theme-section">
+          <h3>Apparence</h3>
+          <div className="theme-toggle-row">
+            <span className="theme-label">
+              <i className="bi bi-moon"></i> Thème
+            </span>
+            <div className="theme-options">
+              <label className={`theme-radio ${theme === "light" ? "selected" : ""}`}>
+                <input
+                  type="radio"
+                  name="theme"
+                  value="light"
+                  checked={theme === "light"}
+                  onChange={handleThemeChange}
+                />
+                <i className="bi bi-sun"></i> Clair
+              </label>
+              <label className={`theme-radio ${theme === "system" ? "selected" : ""}`}>
+                <input
+                  type="radio"
+                  name="theme"
+                  value="system"
+                  checked={theme === "system"}
+                  onChange={handleThemeChange}
+                />
+                <i className="bi bi-laptop"></i> Système
+              </label>
+              <label className={`theme-radio ${theme === "dark" ? "selected" : ""}`}>
+                <input
+                  type="radio"
+                  name="theme"
+                  value="dark"
+                  checked={theme === "dark"}
+                  onChange={handleThemeChange}
+                />
+                <i className="bi bi-moon-stars"></i> Sombre
+              </label>
+            </div>
+          </div>
+        </div>
 
         <form onSubmit={handleUpdate} className="settings-form">
           <div className="settings-form-section">
@@ -150,7 +216,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
             <div className="settings-input-group disabled-group">
               <label>Adresse Email (Non modifiable)</label>
               <div className="settings-input-wrapper">
-                <span className="settings-input-icon">✉️</span>
+                <span className="settings-input-icon"><i className="bi bi-envelope"></i></span>
                 <input type="text" value={user?.email || ""} disabled />
               </div>
             </div>
@@ -158,7 +224,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
             <div className="settings-input-group">
               <label htmlFor="settings-name">Nom complet</label>
               <div className="settings-input-wrapper">
-                <span className="settings-input-icon">👤</span>
+                <span className="settings-input-icon"><i className="bi bi-person"></i></span>
                 <input
                   type="text"
                   id="settings-name"
@@ -179,7 +245,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
                 Entreprise / Organisation
               </label>
               <div className="settings-input-wrapper">
-                <span className="settings-input-icon">🏢</span>
+                <span className="settings-input-icon"><i className="bi bi-building"></i></span>
                 <input
                   type="text"
                   id="settings-company"
@@ -205,7 +271,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
                       }
                     />
                     <span className="ccs-code">{phoneCode || "Autre"}</span>
-                    <span className="ccs-arrow">▼</span>
+                    <span className="ccs-arrow"><i className="bi bi-chevron-down"></i></span>
                   </div>
 
                   {isDropdownOpen && (
@@ -252,7 +318,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
             <div className="settings-input-group" style={{ marginTop: "16px" }}>
               <label htmlFor="settings-role">Votre rôle professionnel</label>
               <div className="settings-input-wrapper">
-                <span className="settings-input-icon">💼</span>
+                <span className="settings-input-icon"><i className="bi bi-briefcase"></i></span>
                 <select
                   id="settings-role"
                   value={role}
@@ -287,7 +353,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
                   <span className="spinner"></span> Sauvegarde...
                 </>
               ) : (
-                <>💾 Sauvegarder les modifications</>
+                  <><i className="bi bi-floppy"></i> Sauvegarder les modifications</>
               )}
             </button>
           </div>

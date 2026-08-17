@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite --host\" \"cd server && npm run dev\" \"n8n start\"",
+    "dev": "concurrently \"vite --host\" \"cd server && npm run dev\"",
+    "start:docker": "concurrently \"vite --host\" \"cd server && npm run dev\"",
     "build": "vite build",
     "start": "npm run build && cd server && npm start",
     "lint": "eslint .",
@@ -13,7 +14,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
-    "flag-icons": "^7.5.0",
+    "bootstrap-icons": "^1.13.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
@@ -27,7 +28,6 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
-    "n8n": "^2.18.5",
     "vite": "^8.0.4"
   }
 }
