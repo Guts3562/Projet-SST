@@ -75,26 +75,26 @@ function Guide() {
       </div>
 
       <div className="card success">
-        <h3>💡 Conseils pédagogiques</h3>
+        <h3><i className="bi bi-lightbulb"></i> Conseils pédagogiques</h3>
         <ul>
           <li>
-            📅 Refaites le quiz une fois par semaine pour ancrer les
+            <i className="bi bi-calendar"></i> Refaites le quiz une fois par semaine pour ancrer les
             connaissances
           </li>
           <li>
-            👥 Organisez des séances collectives d'échanges sur les bonnes
+            <i className="bi bi-people"></i> Organisez des séances collectives d'échanges sur les bonnes
             pratiques
           </li>
           <li>
-            📝 Notez les points à améliorer dans votre environnement de travail
+            <i className="bi bi-journal-text"></i> Notez les points à améliorer dans votre environnement de travail
             immédiat
           </li>
           <li>
-            🔄 Mettez vos connaissances à jour selon les nouvelles
+            <i className="bi bi-arrow-clockwise"></i> Mettez vos connaissances à jour selon les nouvelles
             réglementations tunisiennes
           </li>
           <li>
-            🏥 Vérifiez que votre entreprise dispose d'un médecin du travail
+            <i className="bi bi-hospital"></i> Vérifiez que votre entreprise dispose d'un médecin du travail
             agréé
           </li>
         </ul>

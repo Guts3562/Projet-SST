@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookieParser from 'cookie-parser';
-import axios from 'axios';
 import pool from './db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -96,73 +95,32 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// ── LOCAL FALLBACK RESPONSES ──────────────────────────────────────────────────
+// ── LOCAL ASSISTANT RESPONSES ──────────────────────────────────────────────────
 const FALLBACK_RESPONSES = [
-  { keywords: ['bonjour', 'salut', 'hello', 'bonsoir'], response: 'Bonjour ! Je suis votre assistant expert en Sécurité et Santé au Travail en Tunisie. Comment puis-je vous aider ?' },
-  { keywords: ['quiz', 'examen', 'test', 'évaluation'], response: 'Vous pouvez tester vos connaissances dans la section "Quiz SST". 10 questions tirées aléatoirement parmi notre banque de questions sur la législation, les EPI et les urgences !' },
-  { keywords: ['cnss', 'assurance', 'sécurité sociale'], response: 'La CNSS (Caisse Nationale de Sécurité Sociale) gère les accidents du travail et les maladies professionnelles en Tunisie. Ligne verte : 55 590 228.' },
-  { keywords: ['epi', 'protection', 'casque', 'gants', 'lunettes', 'harnais'], response: 'Les EPI (Équipements de Protection Individuelle) sont obligatoires selon la nature du risque :\n• Casque (NT 09.02) — BTP, mines\n• Chaussures (NT 09.01) — BTP, industrie\n• Harnais (NT 09.12) — travaux en hauteur >2m\n• Masques FFP2/3 (NT 09.08) — chimie, mines' },
-  { keywords: ['loi', 'code du travail', 'législation', 'décret', 'réglementation'], response: "Le Code du Travail tunisien (Loi n°66-27) définit les obligations de l'employeur. Le décret n°2000-389 précise les conditions d'hygiène et de sécurité au travail." },
-  { keywords: ['urgence', 'accident', 'secours', 'blessé', 'incendie'], response: "Numéros d'urgence en Tunisie :\n🚑 SAMU : 190\n🚒 Protection Civile : 198\n👮 Police : 197\n🪖 Garde Nationale : 193\n☠️ Centre Anti-Poison : 71 335 500" },
-  { keywords: ['inrsst', 'institut', 'recherche'], response: "L'INRSST (Institut National de Recherche et de Sécurité en Santé au Travail) est l'organisme de référence tunisien pour la recherche, la formation et l'expertise technique en SST." },
-  { keywords: ['risque', 'danger', 'prévention', 'sécurité'], response: "La prévention des risques professionnels repose sur 9 principes généraux : éliminer les risques à la source, évaluer les risques, adapter le travail à l'homme, planifier la prévention... Consultez la section \"Risques\" de notre plateforme." },
-  { keywords: ['merci', 'thanks', 'parfait', 'super'], response: "Je vous en prie ! N'oubliez pas : la sécurité au travail est l'affaire de tous. 🛡️" },
+  { keywords: ['bonjour', 'salut', 'hello', 'bonsoir'], response: 'Bonjour. Je suis l\'assistant SST Tunisie. Comment puis-je vous assister ?' },
+  { keywords: ['quiz', 'examen', 'test', 'évaluation'], response: 'Vous pouvez évaluer vos connaissances via la section « Quiz SST ». Cette évaluation couvre la législation, les urgences, les EPI et les bonnes pratiques tunisiennes.' },
+  { keywords: ['cnss', 'assurance', 'sécurité sociale'], response: 'La CNSS — Caisse Nationale de Sécurité Sociale — assure la gestion des risques professionnels, des accidents du travail et des maladies professionnelles. Ligne verte : 55 590 228.' },
+  { keywords: ['epi', 'protection', 'casque', 'gants', 'lunettes', 'harnais'], response: 'Les EPI (Équipements de Protection Individuelle) sont réglementés selon la nature du risque :\n• Casque (NT 09.02) — BTP, mines\n• Chaussures (NT 09.01) — BTP, industrie\n• Harnais (NT 09.12) — travaux en hauteur >2m\n• Masques FFP2/3 (NT 09.08) — chimie, mines' },
+  { keywords: ['loi', 'code du travail', 'législation', 'décret', 'réglementation'], response: 'Le Code du Travail tunisien, fondé sur la Loi n°66-27 du 30 avril 1966, définit les obligations de l\'employeur en matière d\'hygiène et de sécurité. Le décret n°2000-389 complète ces dispositions.' },
+  { keywords: ['urgence', 'accident', 'secours', 'blessé', 'incendie'], response: 'Numéros d\'urgence en Tunisie :\n• 198 — Protection Civile\n• 190 — SAMU\n• 71 335 500 — Centre Anti-Poison' },
+  { keywords: ['inrsst', 'institut', 'recherche'], response: 'L\'INRSST (Institut National de Recherche et de Sécurité en Santé au Travail) est l\'organisme de référence tunisien pour la recherche, la formation et l\'expertise technique en SST.' },
+  { keywords: ['risque', 'danger', 'prévention', 'sécurité'], response: 'La prévention des risques professionnels repose sur des principes généraux : éliminer les risques à la source, évaluer les risques, adapter le travail à l\'homme, planifier la prévention. Consultez la section « Risques » de notre plateforme.' },
+  { keywords: ['merci', 'thanks', 'parfait', 'super'], response: 'Je vous en prie. La sécurité au travail est l\'affaire de tous.' },
 ];
 
-const getLocalFallback = (message) => {
+const getLocalResponse = (message) => {
   const lower = message.toLowerCase();
   for (const item of FALLBACK_RESPONSES) {
     if (item.keywords.some(kw => lower.includes(kw))) return item.response;
   }
-  return "Je suis en mode assistant local. Pour des réponses plus précises, veuillez activer le workflow dans votre instance n8n. Je peux tout de même vous renseigner sur la CNSS, les EPI, le Code du Travail ou les numéros d'urgence tunisiens.";
+  return 'Je n\'ai pas identifié de réponse précise à votre demande. Je peux vous renseigner sur la CNSS, les EPI, le Code du Travail tunisien ou les numéros d\'urgence. Veuillez reformuler votre question avec des termes spécifiques.';
 };
 
-// ── CHAT AI ROUTE ─────────────────────────────────────────────────────────────
+// ── CHAT ROUTE ─────────────────────────────────────────────────────────────
 
 app.post('/api/chat', async (req, res) => {
-  const { message, history } = req.body;
-  const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
-
-  if (!n8nWebhookUrl || n8nWebhookUrl.includes('your-n8n-instance')) {
-    return res.status(200).json({ response: getLocalFallback(message || '') });
-  }
-
-  try {
-    const response = await axios.post(n8nWebhookUrl, {
-      message,
-      history,
-      timestamp: new Date().toISOString()
-    }, { timeout: 15000 });
-
-    const data = response.data;
-
-    const botResponse =
-      (Array.isArray(data) ? data[0]?.output || data[0]?.response || data[0]?.text || data[0]?.message || data[0]?.content || data[0]?.answer || data[0]?.reply : null) ||
-      data?.output ||
-      data?.response ||
-      data?.text ||
-      data?.message ||
-      data?.content ||
-      data?.answer ||
-      data?.reply ||
-      (typeof data === 'string' ? data : null);
-
-    if (!botResponse) {
-      console.warn('⚠️ n8n responded but format is unrecognized. Raw response:', JSON.stringify(data));
-      return res.json({ response: getLocalFallback(message || '') });
-    }
-
-    res.json({ response: botResponse });
-  } catch (err) {
-    const status = err.response?.status;
-    console.warn(`⚠️ n8n unreachable (${status || err.message}), using local fallback.`);
-
-    if (status === 404) {
-      console.warn('💡 Tip: Activate your n8n workflow or click "Listen for test event" for the test URL.');
-    }
-
-    res.json({ response: getLocalFallback(message || '') });
-  }
+  const { message } = req.body;
+  res.json({ response: getLocalResponse(message || '') });
 });
 
 // Serve static files from the React app build folder
@@ -272,7 +230,7 @@ app.post('/api/auth/refresh', async (req, res) => {
   let decoded;
   try {
     decoded = jwt.verify(refreshToken, REFRESH_SECRET);
-  } catch (err) {
+  } catch {
     res.clearCookie('sst_refresh', { path: '/api/auth' });
     return res.status(401).json({ error: 'Invalid or expired refresh token.' });
   }
@@ -320,7 +278,7 @@ app.get('/api/auth/me', authenticateToken, async (req, res) => {
       return res.json({ id: req.user.id, email: req.user.email });
     }
     res.json(profileResult.rows[0]);
-  } catch (err) {
+  } catch {
     // Fall back to JWT payload if DB fails
     res.json({ id: req.user.id, email: req.user.email });
   }
@@ -334,7 +292,7 @@ app.get('/api/profile', authenticateToken, async (req, res) => {
     const profileResult = await pool.query('SELECT * FROM profiles WHERE id = $1', [req.user.id]);
     if (profileResult.rows.length === 0) return res.status(404).json({ error: 'Not found.' });
     res.json(profileResult.rows[0]);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Server error.' });
   }
 });
@@ -348,7 +306,7 @@ app.put('/api/profile', authenticateToken, async (req, res) => {
       [full_name, role, company, phone, req.user.id]
     );
     res.json(result.rows[0]);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Server error.' });
   }
 });
@@ -364,7 +322,7 @@ app.post('/api/quiz-results', authenticateToken, async (req, res) => {
       [req.user.id, noun, role, score, total]
     );
     res.status(201).json(result.rows[0]);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Server error.' });
   }
 });
@@ -377,7 +335,7 @@ app.get('/api/quiz-results', authenticateToken, async (req, res) => {
       [req.user.id]
     );
     res.json(results.rows);
-  } catch (err) {
+  } catch {
     res.status(500).json({ error: 'Server error.' });
   }
 });

@@ -3,4 +3,10 @@ server/node_modules
 dist
 .git
 .env
+.env.*
+*.log
+npm-debug.log*
+coverage
+.vscode
+.idea
 db-init/pgdata

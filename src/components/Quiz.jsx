@@ -89,16 +89,16 @@ function Quiz({ user, profile }) {
     );
 
   if (!sessionData)
-    return <div className="quiz-loading">Chargement des questions...</div>;
+    return <div className="quiz-loading">Préparation de l'évaluation en cours...</div>;
 
   const { sessionQuestions, answers, currentQ, saved } = sessionData;
 
   if (sessionQuestions.length === 0)
     return (
       <div className="quiz-error">
-        <h3>Aucune question trouvée</h3>
+        <h3>Aucune question disponible</h3>
         <p>
-          La banque de questions est actuellement vide dans la base de données.
+          La banque de questions est actuellement indisponible. Veuillez réessayer ultérieurement.
         </p>
       </div>
     );
@@ -158,25 +158,27 @@ function Quiz({ user, profile }) {
     ).length;
     const pct = Math.round((score / QUIZ_SIZE) * 100);
 
-    let grade, gradeColor, msg;
+    let grade, gradeColor, msg, msgIcon;
     if (pct === 100) {
       grade = "Excellent";
       gradeColor = "#1A8754";
-      msg = "🏆 Parfait ! Vous maîtrisez parfaitement la SST en Tunisie !";
+      msgIcon = <i className="bi bi-trophy"></i>;
+      msg = "Excellent. Vous démontrez une maîtrise complète des normes SST en vigueur en Tunisie.";
     } else if (pct >= 80) {
       grade = "Très bien";
       gradeColor = "#27AE60";
-      msg =
-        "👍 Très bien ! Quelques points à revoir pour atteindre l'excellence.";
+      msgIcon = <i className="bi bi-thumbs-up"></i>;
+      msg = "Très bien. Quelques points méritent une révision pour atteindre l'excellence.";
     } else if (pct >= 60) {
       grade = "Passable";
       gradeColor = "#E67E22";
-      msg = "📚 Passable. Révisez les ressources CNSS et retentez le quiz.";
+      msgIcon = <i className="bi bi-book"></i>;
+      msg = "Résultat satisfaisant. Nous vous invitons à consulter les ressources CNSS avant de renouveler l'évaluation.";
     } else {
       grade = "Insuffisant";
       gradeColor = "#C0392B";
-      msg =
-        "⚠️ La sécurité est primordiale — consultez le guide et les ressources !";
+      msgIcon = <i className="bi bi-exclamation-triangle-fill"></i>;
+      msg = "La sécurité est primordiale. Nous vous invitons à consulter le guide et les ressources disponibles.";
     }
 
     const catMap = {};
@@ -210,13 +212,13 @@ function Quiz({ user, profile }) {
       const ok = answers[i] === q.correct;
       return (
         <div key={i} className="result-item">
-          <div className="result-icon">{ok ? "✅" : "❌"}</div>
+          <div className="result-icon">{ok ? <i className="bi bi-check-circle-fill"></i> : <i className="bi bi-x-circle-fill"></i>}</div>
           <div className="result-item-text">
             <strong>
               Q{i + 1}. {q.text}
             </strong>
             {ok ? (
-              <em>✓ {q.options[q.correct]}</em>
+              <em><i className="bi bi-check"></i> {q.options[q.correct]}</em>
             ) : (
               <span className="wrong-ans">
                 Votre réponse : {q.options[answers[i]]} &nbsp;|&nbsp; Correcte :{" "}
@@ -232,14 +234,9 @@ function Quiz({ user, profile }) {
       <div id="quiz" className="page active">
         <div className="section-header">
           <span className="section-label amber">Quiz SST</span>
-          <h2>
-            Évaluation de vos
-            <br />
-            connaissances
-          </h2>
+          <h2>Évaluation de vos connaissances</h2>
           <p>
-            10 questions tirées aléatoirement parmi 31 — législation, urgences,
-            EPI et bonnes pratiques. Chaque session est unique !
+            Cette évaluation comprend 10 questions sélectionnées aléatoirement parmi 31, couvrant la législation, les urgences, les EPI et les bonnes pratiques. Chaque session est unique.
           </p>
         </div>
 
@@ -268,13 +265,13 @@ function Quiz({ user, profile }) {
                 {grade}
               </div>
               <div className="results-title">Session terminée</div>
-              <div className="results-msg">{msg}</div>
+              <div className="results-msg">{msgIcon} {msg}</div>
               {user && saved && (
                 <div
                   className="auth-alert success"
                   style={{ margin: "12px auto", maxWidth: "300px" }}
                 >
-                  ☁️ Score sauvegardé sur votre compte !
+                  <i className="bi bi-cloud"></i> Résultat enregistré dans votre espace sécurisé.
                 </div>
               )}
               {!user && (
@@ -285,11 +282,11 @@ function Quiz({ user, profile }) {
                     margin: "12px 0",
                   }}
                 >
-                  Connectez-vous pour sauvegarder vos scores !
+                  Connectez-vous pour sauvegarder vos résultats d'évaluation.
                 </p>
               )}
               <div className="results-pool-note">
-                Banque de questions dynamique · {QUIZ_SIZE} tirées aléatoirement
+                Banque de questions dynamique · 10 questions sélectionnées aléatoirement
               </div>
               <div className="cat-breakdown">{catHtml}</div>
               <button
@@ -297,10 +294,10 @@ function Quiz({ user, profile }) {
                 onClick={resetQuiz}
                 style={{ margin: "24px auto 0", display: "block" }}
               >
-                🔀 Nouvelle session aléatoire
+                <i className="bi bi-shuffle"></i> Nouvelle session
               </button>
               <div className="results-detail">
-                <h4>Détail de vos réponses</h4>
+                <h4>Détail des réponses</h4>
                 {detailHtml}
               </div>
             </div>
@@ -338,9 +335,9 @@ function Quiz({ user, profile }) {
     const ok = userAnswer === q.correct;
     feedbackHtml = (
       <div className={`quiz-feedback ${ok ? "good" : "bad"}`}>
-        <div className="quiz-feedback-icon">{ok ? "✅" : "❌"}</div>
+        <div className="quiz-feedback-icon">{ok ? <i className="bi bi-check-circle-fill"></i> : <i className="bi bi-x-circle-fill"></i>}</div>
         <div className="quiz-feedback-text">
-          <strong>{ok ? "Bonne réponse !" : "Réponse incorrecte"}</strong>
+          <strong>{ok ? "Réponse correcte." : "Réponse incorrecte."}</strong>
           <p>{q.explanation}</p>
         </div>
       </div>
@@ -368,7 +365,7 @@ function Quiz({ user, profile }) {
 
   const prevDisabled = currentQ === 0;
   const isLastQ = currentQ === QUIZ_SIZE - 1;
-  const nextLabel = isLastQ ? "Voir les résultats ✓" : "Suivant →";
+  const nextLabel = isLastQ ? <span>Voir les résultats <i className="bi bi-check"></i></span> : <span>Suivant</span>;
   const nextDisabled = !isAnswered;
 
   return (
@@ -377,8 +374,7 @@ function Quiz({ user, profile }) {
         <span className="section-label amber">Évaluation</span>
         <h2>Quiz SST Tunisie</h2>
         <p>
-          10 questions tirées aléatoirement parmi 31 — législation, urgences,
-          EPI et bonnes pratiques. Chaque session est unique !
+          Cette évaluation comprend 10 questions sélectionnées aléatoirement parmi 41, couvrant la législation, les urgences, les EPI et les bonnes pratiques. Chaque session est unique.
         </p>
       </div>
 
@@ -407,7 +403,7 @@ function Quiz({ user, profile }) {
               onClick={prevQ}
               disabled={prevDisabled}
             >
-              ← Précédent
+              <i className="bi bi-arrow-left"></i> Précédent
             </button>
             <button
               className="btn btn-primary"

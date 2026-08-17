@@ -51,11 +51,11 @@
 }
 
 .logout-btn-final {
-  background: var(--red) !important;
-  color: white !important;
+  background: var(--red);
+  color: white;
   box-shadow: 0 4px 12px rgba(192, 57, 43, 0.2);
 }
 
 .logout-btn-final:hover {
-  background: var(--red2) !important;
+  background: var(--red2);
 }

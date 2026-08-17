@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import "./LogoutConfirmModal.css";
-import logoutIcon from "../../assets/logout-icon.png";
 
 const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
   // Prevent background scrolling when modal is open
@@ -28,7 +27,7 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
         </button>
 
         <div className="logout-header">
-          <div className="logout-icon-big"><img src={logoutIcon} alt="Déconnexion" style={{ width: "40px", height: "40px", objectFit: "contain", verticalAlign: "middle" }} /></div>
+          <div className="logout-icon-big"><i className="bi bi-box-arrow-right"></i></div>
           <h2>Déconnexion</h2>
           <p>Êtes-vous sûr de vouloir vous déconnecter de votre espace SST ?</p>
         </div>

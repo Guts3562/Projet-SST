@@ -1,6 +1,6 @@
 export const risks = [
   {
-    icon: '🏗️', color: 'red',
+    icon: 'bi bi-buildings', color: 'red',
     title: 'Chutes de hauteur — BTP',
     subtitle: 'Premier cause de mortalité au travail en Tunisie',
     dangers: [
@@ -17,7 +17,7 @@ export const risks = [
     ]
   },
   {
-    icon: '🌾', color: 'amber',
+    icon: 'bi bi-tree', color: 'amber',
     title: 'Pesticides et produits phytosanitaires',
     subtitle: 'Intoxications aiguës et maladies chroniques en agriculture',
     dangers: [
@@ -34,7 +34,7 @@ export const risks = [
     ]
   },
   {
-    icon: '🏭', color: 'blue',
+    icon: 'bi bi-building', color: 'blue',
     title: 'Machines industrielles — Textile & Mécanique',
     subtitle: 'Coupures, écrasements, amputations',
     dangers: [
@@ -51,7 +51,7 @@ export const risks = [
     ]
   },
   {
-    icon: '🧯', color: 'red',
+    icon: 'bi bi-fire', color: 'red',
     title: 'Incendie et explosion',
     subtitle: 'Stockage inapproprié, installations électriques vétustes',
     dangers: [
@@ -68,7 +68,7 @@ export const risks = [
     ]
   },
   {
-    icon: '🚚', color: 'amber',
+    icon: 'bi bi-truck', color: 'amber',
     title: 'Accidents de la route professionnels',
     subtitle: 'Transport de marchandises et déplacements professionnels',
     dangers: [
@@ -85,7 +85,7 @@ export const risks = [
     ]
   },
   {
-    icon: '💨', color: 'blue',
+    icon: 'bi bi-wind', color: 'blue',
     title: 'Poussières et maladies respiratoires',
     subtitle: 'Silicose, pneumoconioses — Cimenteries & mines',
     dangers: [
@@ -102,7 +102,7 @@ export const risks = [
     ]
   },
   {
-    icon: '⚡', color: 'red',
+    icon: 'bi bi-lightning', color: 'red',
     title: 'Risques électriques',
     subtitle: 'Électrisation, électrocution, incendies d\'origine électrique',
     dangers: [
@@ -119,7 +119,7 @@ export const risks = [
     ]
   },
   {
-    icon: '🧪', color: 'amber',
+    icon: 'bi bi-droplet', color: 'amber',
     title: 'Produits chimiques dangereux',
     subtitle: 'Industries chimique, pharmaceutique, nettoyage',
     dangers: [

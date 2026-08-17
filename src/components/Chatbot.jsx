@@ -6,57 +6,57 @@ const PREDEFINED_RESPONSES = [
   {
     keywords: ["bonjour", "salut", "hello"],
     response:
-      "Bonjour ! Je suis votre assistant virtuel SST Tunisie. Comment puis-je vous aider aujourd'hui ?",
+      "Bonjour. Je suis l'assistant virtuel SST Tunisie. Comment puis-je vous assister aujourd'hui ?",
   },
   {
     keywords: ["quiz", "examen", "test"],
     response:
-      'Vous pouvez tester vos connaissances dans la section "Quiz SST". C\'est un excellent moyen de vous auto-évaluer sur les normes de sécurité !',
+      "Vous pouvez évaluer vos connaissances via la section « Quiz SST ». Cette évaluation couvre la législation, les urgences, les EPI et les bonnes pratiques tunisiennes.",
   },
   {
     keywords: ["cnss", "assurance"],
     response:
-      "La CNSS (Caisse Nationale de Sécurité Sociale) gère les accidents du travail et les maladies professionnelles en Tunisie. Elle coordonne aussi les actions de prévention.",
+      "La CNSS — Caisse Nationale de Sécurité Sociale — assure la gestion des risques professionnels, des accidents du travail et des maladies professionnelles. Elle coordonne également les actions de prévention en milieu professionnel.",
   },
   {
     keywords: ["epi", "protection", "casque", "gants"],
     response:
-      "Les Équipements de Protection Individuelle (EPI) sont obligatoires selon la nature du risque. Par exemple, le port du casque est régi par la norme NT 09.02 dans le BTP.",
+      "Les Équipements de Protection Individuelle (EPI) sont réglementés selon la nature du risque. Par exemple, le casque de sécurité est soumis à la norme NT 09.02 dans le secteur du BTP.",
   },
   {
     keywords: ["loi", "code du travail", "législation"],
     response:
-      "Le Code du Travail tunisien (Loi n°66-27) définit les obligations de l'employeur. Le décret n°2000-389 précise les conditions d'hygiène et de sécurité.",
+      "Le Code du Travail tunisien, fondé sur la Loi n°66-27 du 30 avril 1966, définit les obligations de l'employeur en matière d'hygiène et de sécurité. Le décret n°2000-389 complète ces dispositions.",
   },
   {
     keywords: ["urgence", "accident", "secours"],
     response:
-      "En Tunisie, les numéros d'urgence sont : 198 (Protection Civile), 190 (SAMU) et 71 335 500 (Centre Anti-Poison).",
+      "Numéros d'urgence en Tunisie :\n• 198 — Protection Civile (pompiers et secours)\n• 190 — SAMU (urgences médicales)\n• 71 335 500 — Centre Anti-Poison",
   },
   {
     keywords: ["merci", "thanks"],
     response:
-      "Je vous en prie ! N'oubliez pas : la sécurité au travail est l'affaire de tous.",
+      "Je vous en prie. La sécurité au travail est l'affaire de tous. N'hésitez pas si vous avez d'autres questions.",
   },
   {
     keywords: ["qui", "est", "tu"],
     response:
-      "Je suis SST-GPT, une intelligence artificielle spécialisée dans la Santé et Sécurité au Travail en Tunisie. Je peux vous guider sur la législation, les EPI et les bonnes pratiques.",
+      "Je suis l'assistant virtuel officiel de SST Tunisie. Mon rôle est de vous orienter sur la réglementation, les EPI et les procédures de sécurité en vigueur en Tunisie.",
   },
 ];
 
 const QUICK_REPLIES = [
-  "🎯 Faire le Quiz",
-  "🛡️ Infos sur les EPI",
-  "⚖️ Loi et Législation",
-  "🚨 Numéros d'urgence",
+  { icon: "bi bi-patch-question", text: "Évaluer mes connaissances" },
+  { icon: "bi bi-shield-check", text: "Consulter les EPI" },
+  { icon: "bi bi-scale", text: "Législation SST" },
+  { icon: "bi bi-telephone", text: "Numéros d'urgence" },
 ];
 
 function Chatbot() {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Bienvenue ! Je suis votre assistant expert en Sécurité et Santé au Travail. Posez-moi vos questions sur les normes tunisiennes !",
+      text: "Bienvenue sur l'assistant SST Tunisie. Je suis à votre disposition pour toute question relative à la réglementation, aux équipements de protection individuelle ou aux procédures de sécurité au travail.",
       type: "bot",
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
@@ -142,26 +142,26 @@ function Chatbot() {
       }
     }
 
-    return "Je ne suis pas sûr de comprendre votre question. Je suis encore en phase d'apprentissage, mais je peux vous renseigner sur la CNSS, les EPI ou le Code du Travail tunisien. Essayez d'utiliser des mots-clés spécifiques !";
+    return "Je n'ai pas identifié de réponse précise à votre demande. Je peux vous renseigner sur la CNSS, les EPI, le Code du Travail tunisien ou les numéros d'urgence. Veuillez reformuler votre question avec des termes spécifiques.";
   };
 
   return (
     <div id="chatbot" className="page active">
       <div className="section-header">
         <span className="section-label blue">Assistant IA</span>
-        <h2>SST-GPT</h2>
+        <h2>Conseiller SST</h2>
         <p>
-          Votre expert virtuel en sécurité disponible 24h/24 pour répondre à vos
-          questions réglementaires.
+          Assistance virtuelle spécialisée en santé et sécurité au travail.
+          Réponses conformes à la réglementation tunisienne en vigueur.
         </p>
       </div>
 
       <div className="chatbot-container">
         <div className="chat-header">
-          <div className="bot-avatar">🤖</div>
+          <div className="bot-avatar"><i className="bi bi-robot"></i></div>
           <div className="header-info">
             <h2>Assistant SST Tunisie</h2>
-            <p>En ligne · IA Spécialisée</p>
+            <p>Disponible · Réponse officielle</p>
           </div>
         </div>
 
@@ -190,9 +190,9 @@ function Chatbot() {
               <button
                 key={i}
                 className="quick-reply-btn"
-                onClick={() => handleSend(reply.split(" ").slice(1).join(" "))}
+                onClick={() => handleSend(reply.text)}
               >
-                {reply}
+                <i className={reply.icon}></i> {reply.text}
               </button>
             ))}
           </div>
@@ -230,6 +230,9 @@ function Chatbot() {
               </svg>
             </button>
           </form>
+        </div>
+        <div className="chat-disclaimer">
+          Assistant virtuel à titre informatif. Consultez un professionnel SST pour toute situation critique.
         </div>
       </div>
     </div>

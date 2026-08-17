@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { api, tokenStore } from './api';
+import { api } from './api';
 
 // ── Context ───────────────────────────────────────────────────────────────────
 const AuthContext = createContext(null);
@@ -108,6 +108,7 @@ export const AuthProvider = ({ children }) => {
  * useAuth — hook to consume the AuthContext.
  * Must be used inside <AuthProvider>.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
