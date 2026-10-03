@@ -247,6 +247,12 @@ html.dark-mode .sector-card.blue-card {
     height: 56px;
     font-size: 26px;
   }
+  .sector-card h4 {
+    font-size: 15px;
+  }
+  .sector-card p {
+    font-size: 13px;
+  }
   .cta-banner {
     padding: 40px 24px;
   }
@@ -260,6 +266,64 @@ html.dark-mode .sector-card.blue-card {
   }
   .cta-banner-text {
     font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sector-card {
+    padding: 18px 14px;
+  }
+  .sector-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .sector-card h4 {
+    font-size: 14px;
+  }
+  .sector-card p {
+    font-size: 12px;
+  }
+  .pill {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  .cta-banner {
+    padding: 32px 18px;
+    margin-top: 28px;
+  }
+  .cta-banner-icon {
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    margin-bottom: 14px;
+  }
+  .cta-banner-icon i {
+    font-size: 22px;
+  }
+  .cta-banner-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  .cta-banner-text {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .cta-banner-btn {
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .sector-card {
+    padding: 16px 12px;
+  }
+  .sector-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
   }
 }
 

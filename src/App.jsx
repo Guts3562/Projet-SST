@@ -9,16 +9,17 @@ import Quiz from "./components/Quiz";
 import Chatbot from "./components/Chatbot";
 import Guide from "./components/Guide";
 import Ressources from "./components/Ressources";
-import LoginModal from "./components/Login/LoginModal";
-import AuthRequired from "./components/Login/AuthRequired";
+import AuthGate from "./components/Login/AuthGate";
 import LogoutConfirmModal from "./components/Login/LogoutConfirmModal";
 import SettingsModal from "./components/Login/SettingsModal";
+import Admin from "./components/Admin";
+import { localized, useLanguage } from "./lib/language";
 
 const NAV_ICONS = {
   accueil: "bi bi-house",
   situations: "bi bi-exclamation-triangle",
   quiz: "bi bi-patch-question",
-  chatbot: "bi bi-robot",
+  chatbot: "bi bi-chat-dots",
   guide: "bi bi-journal-text",
   ressources: "bi bi-folder2-open",
 };
@@ -85,17 +86,18 @@ const PAGE_TITLES = {
   accueil: null,
   situations: { icon: "bi bi-exclamation-triangle", label: "Risques Professionnels" },
   quiz:       { icon: "bi bi-patch-question",     label: "Quiz SST" },
-  chatbot:    { icon: "bi bi-robot",              label: "Assistant IA" },
+  chatbot:    { icon: "bi bi-chat-dots",          label: "Assistant pédagogique" },
   guide:      { icon: "bi bi-journal-text",       label: "Guide Pratique" },
   ressources: { icon: "bi bi-folder2-open",       label: "Ressources & Liens" },
 };
 
 function App() {
   const { user, profile, isLoading, logout, refreshProfile } = useAuth();
+  const language = useLanguage();
+  const text = (french, english) => localized(language, french, english);
 
   const [activeTab, setActiveTab] = useState("accueil");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
@@ -105,17 +107,15 @@ function App() {
     setIsSidebarOpen(false);
   };
 
-  const onLoginSuccess = () => {
-    setIsLoginModalOpen(false);
-  };
+  const isAdmin = user?.system_role === "admin";
 
   const navItems = [
-    { id: "accueil",    label: "Accueil",    icon: NAV_ICONS.accueil },
-    { id: "situations", label: "Risques",     icon: NAV_ICONS.situations },
-    { id: "quiz",       label: "Quiz SST",    icon: NAV_ICONS.quiz },
-    { id: "chatbot",    label: "Assistant",   icon: NAV_ICONS.chatbot },
-    { id: "guide",      label: "Guide",       icon: NAV_ICONS.guide },
-    { id: "ressources", label: "Ressources",  icon: NAV_ICONS.ressources },
+    { id: "accueil", label: text("Accueil", "Home"), icon: NAV_ICONS.accueil },
+    { id: "situations", label: text("Risques", "Risks"), icon: NAV_ICONS.situations },
+    { id: "quiz", label: text("Quiz SST", "OSH quiz"), icon: NAV_ICONS.quiz },
+    { id: "chatbot", label: text("Assistant", "Assistant"), icon: NAV_ICONS.chatbot },
+    { id: "guide", label: text("Guide", "Guide"), icon: NAV_ICONS.guide },
+    { id: "ressources", label: text("Ressources", "Resources"), icon: NAV_ICONS.ressources },
   ];
 
   const renderPage = () => {
@@ -125,11 +125,7 @@ function App() {
       case "situations":
         return <Risques />;
       case "quiz":
-        return user ? (
-          <Quiz user={user} profile={profile} />
-        ) : (
-          <AuthRequired onLoginClick={() => setIsLoginModalOpen(true)} />
-        );
+        return <Quiz user={user} profile={profile} />;
       case "chatbot":
         return <Chatbot />;
       case "guide":
@@ -162,8 +158,21 @@ function App() {
         }}
       >
         <img src={sstLogo} alt="SST Logo" style={{ height: "24px", width: "auto", objectFit: "contain" }} />
-        Chargement…
+        {text("Chargement…", "Loading…")}
       </div>
+    );
+  }
+
+  if (!user) {
+    return <AuthGate />;
+  }
+
+  if (isAdmin) {
+    return (
+      <Admin
+        user={user}
+        onLogout={handleLogout}
+      />
     );
   }
 
@@ -218,7 +227,7 @@ function App() {
                 <span className="profile-name">{fullName}</span>
                 <div className="profile-status">
                   <span className="status-dot"></span>
-                  En ligne
+                  {text("En ligne", "Online")}
                 </div>
               </div>
             </div>
@@ -244,10 +253,7 @@ function App() {
             <button
               className="btn btn-primary"
               style={{ width: "100%", padding: "14px" }}
-              onClick={() => {
-                setIsLoginModalOpen(true);
-                setIsSidebarOpen(false);
-              }}
+              onClick={() => setIsSidebarOpen(false)}
             >
               Accéder au compte
             </button>
@@ -276,13 +282,13 @@ function App() {
               <div className="hero-user-pill">
                 <i className="bi bi-hand"></i>
                 <span className="hero-user-name">
-                  Bonjour, {fullName?.split(" ")[0]}
+                  {text("Bonjour", "Hello")}, {fullName}
                 </span>
               </div>
             )}
 
             <div className="hero-badge">
-              <TunisianFlag /> Portail National de Référence en Prévention &amp; Sécurité
+              <TunisianFlag /> Projet pédagogique de sensibilisation SST
             </div>
             <h1>
               Santé &amp; Sécurité
@@ -290,28 +296,22 @@ function App() {
               au <span>Travail</span> Tunisie
             </h1>
             <p>
-              Cadre d'accompagnement réglementaire, ressources académiques et outils d'évaluation conformes au Code du Travail tunisien et aux directives nationales de la CNSS.
+              Ressources pédagogiques et outils d’évaluation autour de la santé et de la sécurité au travail en Tunisie. Les informations réglementaires sont à vérifier auprès des sources officielles.
             </p>
             <div className="hero-stats">
               <div className="hero-stat">
-                <div className="hero-stat-num">45 000+</div>
+                <div className="hero-stat-num">Prévenir</div>
                 <div className="hero-stat-label">
-                  Sinistres Professionnels / Déclarés annuellement (CNSS)
+                  Identifier les situations à risque
                 </div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-num">35%</div>
-                <div className="hero-stat-label">Incidence BTP / Secteur à haute vigilance</div>
+                <div className="hero-stat-num">Apprendre</div>
+                <div className="hero-stat-label">Consulter les ressources pédagogiques</div>
               </div>
               <div className="hero-stat">
-                <div className="hero-stat-num">70%</div>
-                <div className="hero-stat-label">Taux d'Évitabilité / Par actions de prévention active</div>
-              </div>
-              <div className="hero-stat">
-                <div className="hero-stat-num">CNSS</div>
-                <div className="hero-stat-label">
-                  Organisme Assureur / Gestion des risques professionnels
-                </div>
+                <div className="hero-stat-num">Évaluer</div>
+                <div className="hero-stat-label">Tester ses connaissances avec le quiz</div>
               </div>
             </div>
           </div>
@@ -334,14 +334,20 @@ function App() {
                 ) : (
                   <span>{pageInfo.icon}</span>
                 )}
-                <span>{pageInfo.label}</span>
+                <span>{({
+                  situations: text("Risques professionnels", "Occupational risks"),
+                  quiz: text("Quiz SST", "OSH quiz"),
+                  chatbot: text("Assistant pédagogique", "Learning assistant"),
+                  guide: text("Guide pratique", "Practical guide"),
+                  ressources: text("Ressources et liens", "Resources and links"),
+                })[activeTab] || pageInfo.label}</span>
               </div>
             )}
             {user && (
               <div className="inner-user-pill">
                 <i className="bi bi-person"></i>
                 <span className="inner-user-name">
-                  {fullName?.split(" ")[0]}
+                  {fullName}
                 </span>
               </div>
             )}
@@ -355,11 +361,6 @@ function App() {
       </main>
 
       {/* Modals */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onLoginSuccess={onLoginSuccess}
-      />
       <LogoutConfirmModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}

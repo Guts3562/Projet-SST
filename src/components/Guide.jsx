@@ -41,11 +41,12 @@ function Guide() {
         <div className="step-item">
           <div className="step-num">3</div>
           <div className="step-body">
-            <h4>Consulter les ressources officielles</h4>
+            <h4>Consulter les portails institutionnels</h4>
             <p>
-              Accédez aux numéros d'urgence tunisiens, aux normes EPI, aux
-              documents officiels et aux institutions de référence (CNSS,
-              INRSST, ministère des Affaires Sociales).
+              Utilisez les liens institutionnels et les portails réglementaires
+              de la rubrique Ressources pour retrouver les textes et coordonnées
+              à jour. La présence d’un lien ne signifie pas que chaque affirmation
+              de ce projet a été validée.
             </p>
           </div>
         </div>
@@ -64,11 +65,12 @@ function Guide() {
         <div className="step-item">
           <div className="step-num">5</div>
           <div className="step-body">
-            <h4>Se former au SST agréé</h4>
+            <h4>Se former aux premiers secours au travail</h4>
             <p>
-              Devenez Sauveteur Secouriste du Travail (SST) reconnu par la CNSS.
-              Contactez votre service RH ou la CNSS au 55 590 228 pour vous
-              inscrire à une formation agréée.
+              Renseignez-vous auprès d’un organisme de formation et vérifiez
+              auprès des autorités compétentes les conditions de reconnaissance
+              applicables en Tunisie. Les coordonnées de contact du projet ne
+              sont pas encore vérifiées.
             </p>
           </div>
         </div>

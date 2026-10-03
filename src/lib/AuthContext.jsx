@@ -8,7 +8,7 @@ const AuthContext = createContext(null);
  * AuthProvider — wraps the entire app and provides auth state to all components.
  *
  * State:
- *  - user    : { id, email } or null
+ *  - user    : { id, email, system_role } or null
  *  - profile : full profile object or null
  *  - isLoading : true while the initial session restore is happening
  *
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await api.auth.me();
       if (data) {
-        setUser({ id: data.id, email: data.email });
+        setUser({ id: data.id, email: data.email, system_role: data.system_role });
         setProfile(data);
       } else {
         setUser(null);
@@ -63,16 +63,24 @@ export const AuthProvider = ({ children }) => {
 
   // ── Actions ─────────────────────────────────────────────────────────────────
 
-  const login = async (email, password) => {
-    const data = await api.auth.login(email, password);
-    setUser({ id: data.user.id, email: data.user.email });
+  const login = async (email, password, loginType = 'client') => {
+    const data = await api.auth.login(email, password, loginType);
+    setUser({
+      id: data.user.id,
+      email: data.user.email,
+      system_role: data.user.system_role,
+    });
     setProfile(data.user);
     return data;
   };
 
   const register = async (registerData) => {
     const data = await api.auth.register(registerData);
-    setUser({ id: data.user.id, email: data.user.email });
+    setUser({
+      id: data.user.id,
+      email: data.user.email,
+      system_role: data.user.system_role,
+    });
     setProfile(data.user);
     return data;
   };
@@ -88,7 +96,7 @@ export const AuthProvider = ({ children }) => {
       const data = await api.profile.get();
       if (data) {
         setProfile(data);
-        setUser({ id: data.id, email: data.email });
+        setUser({ id: data.id, email: data.email, system_role: data.system_role });
       }
     } catch (err) {
       console.error('Failed to refresh profile:', err);

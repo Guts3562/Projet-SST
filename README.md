@@ -1,79 +1,229 @@
-# SST Tunisie — Plateforme de Sensibilisation à la Santé et Sécurité au Travail
+# SST Tunisie
 
-[![React](https://img.shields.io/badge/React-19.2-61dafb?logo=react)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?logo=vite)](https://vitejs.dev/)
-[![Node.js](https://img.shields.io/badge/Node.js-LTS-339933?logo=node.js)](https://nodejs.org/)
+### Plateforme pédagogique de sensibilisation à la santé et à la sécurité au travail
+
+Projet académique réalisé dans le cadre des études en **Santé et Sécurité au Travail (SST)**. L’application propose un espace numérique pour découvrir des notions de prévention, consulter des ressources et s’exercer à l’aide d’un quiz.
+
+> **Important — usage pédagogique**
+> Cette application est un support de sensibilisation développé à des fins académiques. Elle ne remplace ni les textes officiels, ni l’avis d’un professionnel compétent, ni une évaluation des risques ou un audit de conformité. Les informations doivent être vérifiées auprès des sources officielles avant toute utilisation professionnelle.
+
+[![React](https://img.shields.io/badge/React-19-149ECA?logo=react)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite)](https://vite.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js)](https://nodejs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql)](https://www.postgresql.org/)
 
-**SST Tunisie** est une plateforme web full-stack dédiée à la sensibilisation à la **Santé et Sécurité au Travail** en Tunisie. Elle centralise les ressources réglementaires et propose des outils interactifs pour améliorer la culture de prévention auprès des professionnels, employeurs et travailleurs.
+## Sommaire
 
----
+- [Objectifs pédagogiques](#objectifs-pédagogiques)
+- [Fonctionnalités](#fonctionnalités)
+- [Architecture du projet](#architecture-du-projet)
+- [Technologies](#technologies)
+- [Prérequis](#prérequis)
+- [Installation avec Docker](#installation-avec-docker)
+- [Configuration](#configuration)
+- [Utilisation](#utilisation)
+- [Commandes utiles](#commandes-utiles)
+- [Tests et limites](#tests-et-limites)
+- [Structure des fichiers](#structure-des-fichiers)
 
-## Contexte
+## Objectifs pédagogiques
 
-La SST en Tunisie s'appuie sur un cadre réglementaire structuré — **Loi n°66-27** du 30 avril 1966, décrets d'application, normes tunisiennes (NT) — et des organismes tels que la CNSS et l'INRSST. Malgré ce dispositif, l'accès à l'information reste dispersé et les outils de formation interactifs sont rares.
+Le projet vise à rendre des contenus de sensibilisation à la SST plus accessibles et interactifs. Il permet également de mettre en pratique plusieurs notions de développement logiciel :
 
-Cette plateforme a été conçue pour répondre à ce manque en offrant un **point d'entrée unique** vers la réglementation, les contacts institutionnels, les numéros d'urgence, ainsi que des outils d'auto-évaluation et un assistant conversationnel spécialisé.
-
----
+- concevoir une application web organisée autour d’une interface, d’une API et d’une base de données ;
+- gérer l’authentification et différencier les permissions selon le rôle ;
+- enregistrer et consulter des résultats d’évaluation ;
+- structurer et maintenir un catalogue de questions ;
+- tester les règles métier et exécuter l’application dans un environnement conteneurisé.
 
 ## Fonctionnalités
 
-### Assistant Conversationnel SST
+### Espace Client
 
-Un assistant intégré capable de répondre aux questions courantes sur le Code du Travail tunisien, les organismes institutionnels (CNSS, INRSST, Inspection du Travail), les EPI et normes NT associées, ainsi que les procédures d'urgence et contacts nationaux.
+- Consultation de contenus sur les risques professionnels et les mesures de prévention.
+- Guide pratique et ressources d’information SST.
+- Quiz avec questions sélectionnées pour une session ; le barème est appliqué côté serveur et le résultat est enregistré pour le compte connecté.
+- Assistant pédagogique basé sur des réponses et des mots-clés prédéfinis. Il ne s’agit pas d’une intelligence artificielle ni d’un service de conseil officiel.
+- Paramètres du compte, dont le thème et la langue de l’interface.
 
-### Quiz d'Évaluation
+### Espace Administrateur
 
-Un système d'évaluation dynamique avec sélection aléatoire de 10 questions par session, feedback immédiat après chaque réponse, et sauvegarde des résultats pour les utilisateurs authentifiés.
+- Vue d’ensemble et consultation des comptes et résultats de quiz.
+- Gestion des rôles des utilisateurs.
+- Gestion du catalogue des questions : création, modification, publication, archivage ou suppression selon les contrôles de l’application.
+- La publication d’une question requiert des informations de référence et de vérification de sa source.
+- Journalisation des opérations administratives prises en charge par l’application.
 
-### Catalogue des Risques Professionnels
+L’interface et l’API appliquent les rôles Client et Administrateur. Les contrôles d’accès sont effectués côté serveur : masquer une option dans l’interface ne suffit pas à protéger une opération.
 
-Un répertoire interactif des situations à risque spécifiques à la Tunisie, organisé par secteur d'activité (BTP, agriculture, industrie) avec les dangers détaillés et mesures de prévention associées.
+### Authentification et récupération
 
-### Ressources & Contacts
+- Connexion séparée selon le type d’accès Client ou Administrateur.
+- Mots de passe stockés sous forme hachée et sessions gérées par l’API.
+- Récupération du mot de passe par lien à usage unique, valide 30 minutes. L’envoi des courriels nécessite une configuration SMTP.
 
-Répertoire structuré incluant les normes tunisiennes applicables aux EPI, les documents réglementaires obligatoires, le répertoire des institutions et les numéros d'urgence nationaux.
+## Architecture du projet
 
-### Guide Pratique de Prévention
+```text
+Navigateur
+   │
+   ├── Interface React / Vite (port 5173)
+   │       └── Requêtes /api transmises au serveur
+   │
+   └── API REST Node.js / Express (port 5000)
+           └── PostgreSQL (port 5432)
+```
 
-Un guide étape par étape couvrant les bonnes pratiques de prévention, de l'identification des risques à la mise en conformité.
+Docker Compose orchestre les services de l’application et de la base de données. Le volume nommé `pgdata` conserve les données PostgreSQL entre les redémarrages des conteneurs.
+
+## Technologies
+
+| Partie | Technologies | Rôle |
+| --- | --- | --- |
+| Interface | React, Vite, CSS, Bootstrap Icons | Affichage de l’application web |
+| API | Node.js, Express | Authentification, règles métier et accès aux données |
+| Données | PostgreSQL 15 | Comptes, profils, questions, résultats et sessions |
+| Sécurité | JWT, bcrypt, limitation de débit | Authentification, hachage des mots de passe et protection de certains points d’accès |
+| Courriels | Nodemailer, SMTP | Envoi des liens de récupération de mot de passe |
+| Environnement | Docker, Docker Compose | Lancement reproductible des services |
+| Qualité | ESLint, Node.js Test Runner | Vérification du code et tests unitaires du backend |
+
+## Prérequis
+
+- Docker Desktop avec Docker Compose activé.
+- Un navigateur web récent.
+- Pour lancer les commandes de qualité directement sur l’ordinateur : Node.js 20.19 ou plus récent et npm.
+- Une configuration SMTP est nécessaire uniquement pour envoyer réellement les courriels de récupération du mot de passe.
+
+## Installation avec Docker
+
+Depuis le dossier du projet, créez le fichier `.env` à partir du modèle fourni :
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Si un fichier `.env` existe déjà, **ne l’écrasez pas**. Ouvrez-le et complétez les variables requises. Remplacez les secrets d’exemple par des valeurs fortes, uniques et différentes pour `DB_PASSWORD`, `JWT_SECRET` et `REFRESH_SECRET`.
+
+Démarrez ensuite les services :
+
+```powershell
+docker compose up -d --build
+```
+
+Ouvrez l’application dans le navigateur :
+
+- Interface web : <http://localhost:5173>
+- Vérification de l’API : <http://localhost:5000/api/health>
+
+Pour consulter l’état des conteneurs et les journaux :
+
+```powershell
+docker compose ps
+docker compose logs -f app
+```
+
+Pour arrêter les services :
+
+```powershell
+docker compose down
+```
+
+Cette commande conserve les données PostgreSQL. **N’utilisez pas `docker compose down -v`** sauf si vous souhaitez explicitement supprimer le volume de base de données et toutes ses données.
+
+## Configuration
+
+Les variables sont définies dans le fichier `.env` à la racine du projet. Le modèle [.env.example](./.env.example) contient la liste des paramètres attendus.
+
+### Accès administrateur
+
+Pour attribuer le rôle Administrateur à un compte :
+
+1. Inscrivez d’abord le compte depuis l’écran de création de compte Client.
+2. Définissez `ADMIN_EMAIL` dans `.env` avec l’adresse exacte utilisée pour ce compte.
+3. Redémarrez le service applicatif afin que la configuration soit prise en compte :
+
+   ```powershell
+   docker compose up -d --force-recreate app
+   ```
+
+L’adresse configurée doit correspondre à un compte existant. L’API vérifie le rôle pour les opérations d’administration.
+
+### Courriels de récupération de mot de passe
+
+Les paramètres SMTP sont facultatifs pour le démarrage de l’application, mais nécessaires pour envoyer les liens de récupération. Exemple de configuration Gmail :
+
+```dotenv
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=adresse-expediteur@gmail.com
+SMTP_PASSWORD=mot-de-passe-d-application
+SMTP_FROM=adresse-expediteur@gmail.com
+```
+
+Utilisez un **mot de passe d’application** fourni par Google si votre compte le permet, et non le mot de passe normal du compte. Pour un autre fournisseur, utilisez ses paramètres SMTP. Ne partagez jamais ces identifiants et ne les ajoutez pas au dépôt Git. Après modification, recréez le conteneur applicatif :
+
+```powershell
+docker compose up -d --force-recreate app
+```
+
+Les jetons de réinitialisation sont à usage unique et expirent au bout de 30 minutes. Si SMTP n’est pas configuré ou est indisponible, la récupération par courriel ne peut pas aboutir.
+
+### Base de données
+
+Les paramètres PostgreSQL sont également définis dans `.env`. Le script [db-init/init.sql](./db-init/init.sql) prépare le schéma lors de l’initialisation d’une nouvelle base. Le service applicatif prend en charge les migrations complémentaires prévues au démarrage.
+
+Sur une base déjà créée, modifier `DB_PASSWORD` dans `.env` ne change pas automatiquement le mot de passe du rôle PostgreSQL existant.
+
+## Utilisation
+
+1. Ouvrez l’application et choisissez le type de connexion.
+2. Créez un compte Client ou connectez-vous avec un compte existant.
+3. Parcourez les rubriques pédagogiques, puis réalisez le quiz.
+4. Pour administrer les comptes ou les questions, connectez-vous avec un compte auquel le rôle Administrateur a été attribué.
+
+## Commandes utiles
+
+À exécuter depuis la racine du projet, avec les dépendances installées :
+
+| Commande | Description |
+| --- | --- |
+| `npm run lint` | Analyse le code avec ESLint |
+| `npm test` | Exécute les tests unitaires du backend |
+| `npm run build` | Compile l’interface pour la production |
+| `npm run dev` | Lance l’interface et l’API en mode développement local |
+
+Le mode de développement local nécessite également une base PostgreSQL accessible et un fichier `.env` adapté à cet environnement. Pour une première utilisation, le lancement avec Docker Compose est recommandé.
+
+## Tests et limites
+
+Les tests automatisés actuels couvrent notamment les règles de validation des questions, le calcul et la validation des réponses du quiz, ainsi que des fonctions liées à la récupération du mot de passe. Ils ne remplacent pas des tests complets de sécurité, d’accessibilité, d’utilisabilité ou de conformité réglementaire.
+
+Les informations relatives aux obligations, normes, organismes, coordonnées ou numéros d’urgence doivent être revérifiées à partir des sources officielles pertinentes et de leur version en vigueur. La rubrique **Ressources** de l’application fournit des liens de référence, mais la présence d’un lien ne garantit pas à elle seule l’exactitude ou l’actualité de chaque contenu.
+
+## Structure des fichiers
+
+```text
+.
+├── db-init/                 # Schéma et données initiales PostgreSQL
+├── public/                  # Ressources publiques de l’interface
+├── server/
+│   ├── index.js             # Serveur Express et routes API
+│   ├── admin.js             # Règles métier liées à l’administration
+│   ├── quiz.js              # Validation et calcul du quiz
+│   └── *.test.js            # Tests unitaires du backend
+├── src/
+│   ├── components/          # Pages et composants React
+│   ├── lib/                 # API cliente, authentification et langue
+│   ├── utils/               # Données et utilitaires partagés
+│   ├── App.jsx              # Application et navigation
+│   └── main.jsx             # Point d’entrée React
+├── docker-compose.yml       # Services applicatif et PostgreSQL
+├── Dockerfile.dev           # Image de développement
+└── .env.example             # Modèle de configuration locale
+```
 
 ---
 
-## Architecture
-
-La plateforme suit une architecture **frontend / backend / base de données** :
-
-- **Frontend** — SPA React avec navigation par sidebar responsive, thème clair/sombre dynamique et gestion d'état via Context API.
-- **Backend** — API REST Express avec authentification JWT (access token + refresh token httpOnly).
-- **Base de données** — PostgreSQL avec schéma relationnel pour les utilisateurs, quiz et sessions.
-- **Conteneurisation** — Docker Compose pour l'orchestration de l'environnement.
-
----
-
-## Stack Technologique
-
-| Couche | Technologie | Usage |
-| :--- | :--- | :--- |
-| **Frontend** | React 19 + Vite 8 | Interface SPA réactive |
-| **Backend** | Node.js + Express | API REST et authentification |
-| **Base de données** | PostgreSQL 15 | Stockage persistant |
-| **Styling** | CSS natif + variables CSS | Thème dynamique clair/sombre |
-| **Icônes** | Bootstrap Icons | Bibliothèque d'icônes |
-| **Conteneurisation** | Docker + Docker Compose | Environnement reproductible |
-| **Authentification** | JWT + Bcrypt | Sécurité des sessions |
-
----
-
-## Design & Accessibilité
-
-- **Thème dynamique** : basculement mode clair / sombre avec persistance, transitions fluides sur toutes les surfaces
-- **Variables CSS sémantiques** : palette de tokens pour couleurs, espacements et typographie
-- **Typographie** : Plus Jakarta Sans (interface) et Fraunces (titres)
-- **Responsive** : adaptation de 320px à 1440px+, sidebar overlay sur mobile
-- **Accessibilité** : contrastes conformes WCAG AA, états de focus visibles, labels ARIA et navigation clavier complète
-
----
-
-*Projet développé dans le cadre du module Sécurité et Santé au Travail — 1ère année. 🇹🇳*
+*Projet académique — première année, domaine Santé et Sécurité au Travail (SST), Tunisie.*

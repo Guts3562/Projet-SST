@@ -27,7 +27,7 @@ const getHeaders = (extra = {}) => {
 };
 
 // ── SILENT REFRESH STATE ──────────────────────────────────────────────────────
-// We track an in-flight refresh promise so multiple concurrent 401/403 responses
+// We track an in-flight refresh promise so multiple concurrent 401 responses
 // all wait for the same single refresh request rather than firing several.
 let _refreshPromise = null;
 
@@ -55,7 +55,7 @@ const silentRefresh = async () => {
 /**
  * apiFetch — drop-in replacement for fetch() that:
  *  1. Attaches Authorization header automatically
- *  2. On 401/403, attempts one silent token refresh then retries
+ *  2. On 401, attempts one silent token refresh then retries
  *  3. On refresh failure, fires 'auth:logout' event and throws
  */
 const apiFetch = async (url, options = {}, _isRetry = false) => {
@@ -69,7 +69,7 @@ const apiFetch = async (url, options = {}, _isRetry = false) => {
   });
 
   // If unauthorised and this isn't already a retry, attempt silent refresh
-  if ((res.status === 401 || res.status === 403) && !_isRetry) {
+  if (res.status === 401 && !_isRetry) {
     try {
       await silentRefresh();
       // Retry the original request once with the new access token
@@ -88,6 +88,28 @@ const apiFetch = async (url, options = {}, _isRetry = false) => {
 // ── API SURFACE ───────────────────────────────────────────────────────────────
 export const api = {
   auth: {
+    requestPasswordReset: async (email) => {
+      const res = await fetch(`${API_BASE_URL}/auth/password-reset/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to request password reset');
+      return json;
+    },
+
+    completePasswordReset: async (token, password) => {
+      const res = await fetch(`${API_BASE_URL}/auth/password-reset/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to reset password');
+      return json;
+    },
+
     register: async (data) => {
       const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
@@ -101,12 +123,12 @@ export const api = {
       return json;
     },
 
-    login: async (email, password) => {
+    login: async (email, password, loginType = 'client') => {
       const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, login_type: loginType }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Login failed');
@@ -186,15 +208,79 @@ export const api = {
   },
 
   chat: {
-    sendMessage: async (message, history) => {
+    sendMessage: async (message) => {
       const res = await apiFetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, history }),
+        body: JSON.stringify({ message }),
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Failed to send message');
       return json;
+    },
+  },
+
+  admin: {
+    getOverview: async () => {
+      const res = await apiFetch(`${API_BASE_URL}/admin/overview`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to fetch admin overview');
+      return json;
+    },
+
+    getUsers: async () => {
+      const res = await apiFetch(`${API_BASE_URL}/admin/users`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to fetch users');
+      return json;
+    },
+
+    getQuizResults: async () => {
+      const res = await apiFetch(`${API_BASE_URL}/admin/quiz-results`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to fetch quiz results');
+      return json;
+    },
+
+    setUserRole: async (userId, system_role) => {
+      const res = await apiFetch(`${API_BASE_URL}/admin/users/${userId}/role`, {
+        method: 'PUT',
+        body: JSON.stringify({ system_role }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to update user role');
+      return json;
+    },
+
+    getQuestions: async () => {
+      const res = await apiFetch(`${API_BASE_URL}/admin/questions`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Failed to fetch managed questions');
+      return json;
+    },
+
+    saveQuestion: async (question) => {
+      const isUpdate = Number.isInteger(question.id);
+      const res = await apiFetch(
+        `${API_BASE_URL}/admin/questions${isUpdate ? `/${question.id}` : ''}`,
+        {
+          method: isUpdate ? 'PUT' : 'POST',
+          body: JSON.stringify(question),
+        },
+      );
+      const json = res.status === 204 ? null : await res.json();
+      if (!res.ok) throw new Error(json?.error || 'Failed to save question');
+      return json;
+    },
+
+    archiveQuestion: async (questionId) => {
+      const res = await apiFetch(`${API_BASE_URL}/admin/questions/${questionId}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        const json = await res.json();
+        throw new Error(json.error || 'Failed to archive question');
+      }
     },
   },
 };

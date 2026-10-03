@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import "./LoginModal.css";
 import "./SettingsModal.css";
 import { api } from "../../lib/api";
 import { countryCodes } from "../../utils/countryCodes";
+import { getLanguage, localized, setLanguage } from "../../lib/language";
 
 const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
   const [name, setName] = useState("");
@@ -14,18 +16,12 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("theme");
-      if (stored === "dark" || stored === "light" || stored === "system") {
-        return stored;
-      }
-      return "system";
-    }
-    return "system";
-  });
+  const [theme, setTheme] = useState("system");
+  const [language, setLanguageDraft] = useState("fr");
+  const text = (french, english) => localized(language, french, english);
 
   const applyTheme = (selected) => {
+    localStorage.setItem("theme", selected);
     const root = document.documentElement;
     root.classList.remove("dark-mode", "light-mode");
     if (selected === "dark") {
@@ -33,12 +29,6 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
     } else if (selected === "light") {
       root.classList.add("light-mode");
     }
-    localStorage.setItem("theme", selected);
-    setTheme(selected);
-  };
-
-  const handleThemeChange = (e) => {
-    applyTheme(e.target.value);
   };
 
   useEffect(() => {
@@ -66,23 +56,34 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Update local state when profile prop changes
+  // Load saved values into the draft each time the settings dialog opens.
   useEffect(() => {
-    if (profile) {
-      setName(profile.full_name || "");
-      setRole(profile.role || "worker");
-      setCompany(profile.company || "");
+    if (!isOpen) return;
 
-      const savedPhone = profile.phone || "";
-      if (savedPhone.includes(" ")) {
-        const parts = savedPhone.split(" ");
-        setPhoneCode(parts[0]);
-        setPhoneNumber(parts.slice(1).join(" "));
-      } else {
-        setPhoneNumber(savedPhone);
-      }
+    setName(profile?.full_name || "");
+    setRole(profile?.role || "worker");
+    setCompany(profile?.company || "");
+
+    const savedPhone = profile?.phone || "";
+    if (savedPhone.includes(" ")) {
+      const [savedCode, ...phoneParts] = savedPhone.split(" ");
+      setPhoneCode(savedCode || "+216");
+      setPhoneNumber(phoneParts.join(" "));
+    } else {
+      setPhoneCode("+216");
+      setPhoneNumber(savedPhone);
     }
-  }, [profile]);
+
+    const storedTheme = localStorage.getItem("theme");
+    setTheme(
+      storedTheme === "dark" || storedTheme === "light" || storedTheme === "system"
+        ? storedTheme
+        : "system",
+    );
+    setLanguageDraft(getLanguage());
+    setError("");
+    setSuccess(false);
+  }, [isOpen, profile]);
 
   if (!isOpen) return null;
 
@@ -123,12 +124,14 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
 
     try {
       await api.profile.update({
-        full_name: name,
+        full_name: name.trim(),
         role: role,
-        company: company,
+        company: company.trim(),
         phone: fullPhone,
       });
 
+      applyTheme(theme);
+      setLanguage(language);
       setSuccess(true);
       await onProfileUpdate();
 
@@ -137,7 +140,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
         onClose();
       }, 1500);
     } catch (err) {
-      setError(err.message);
+      setError(text("Impossible de mettre à jour le profil. Vérifiez les informations puis réessayez.", "Unable to update the profile. Check the information and try again."));
       console.error("Settings Update Error:", err);
     } finally {
       setLoading(false);
@@ -150,7 +153,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
         className="modal-content settings-modal-premium"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="modal-close" onClick={onClose}>
+        <button type="button" className="modal-close" onClick={onClose}>
           &times;
         </button>
 
@@ -158,63 +161,82 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
           <div className="settings-icon-wrapper">
             <i className="bi bi-gear"></i>
           </div>
-          <h2>Paramètres du compte</h2>
-          <p>Gérez vos informations personnelles et votre rôle</p>
+          <h2>{text("Paramètres du compte", "Account settings")}</h2>
+          <p>{text("Gérez vos informations personnelles et votre rôle", "Manage your personal information and occupation")}</p>
         </div>
 
         {success && (
           <div className="settings-alert success">
-            <i className="bi bi-check-circle-fill"></i> Profil mis à jour avec succès !
+            <i className="bi bi-check-circle-fill"></i> {text("Profil mis à jour avec succès !", "Profile updated successfully!")}
           </div>
         )}
         {error && <div className="settings-alert error"><i className="bi bi-x-circle-fill"></i> {error}</div>}
 
-        <div className="settings-theme-section">
-          <h3>Apparence</h3>
-          <div className="theme-toggle-row">
-            <span className="theme-label">
-              <i className="bi bi-moon"></i> Thème
-            </span>
-            <div className="theme-options">
-              <label className={`theme-radio ${theme === "light" ? "selected" : ""}`}>
-                <input
-                  type="radio"
-                  name="theme"
-                  value="light"
-                  checked={theme === "light"}
-                  onChange={handleThemeChange}
-                />
-                <i className="bi bi-sun"></i> Clair
-              </label>
-              <label className={`theme-radio ${theme === "system" ? "selected" : ""}`}>
-                <input
-                  type="radio"
-                  name="theme"
-                  value="system"
-                  checked={theme === "system"}
-                  onChange={handleThemeChange}
-                />
-                <i className="bi bi-laptop"></i> Système
-              </label>
-              <label className={`theme-radio ${theme === "dark" ? "selected" : ""}`}>
-                <input
-                  type="radio"
-                  name="theme"
-                  value="dark"
-                  checked={theme === "dark"}
-                  onChange={handleThemeChange}
-                />
-                <i className="bi bi-moon-stars"></i> Sombre
-              </label>
+        <form onSubmit={handleUpdate} className="settings-form">
+          <div className="settings-theme-section">
+            <h3>{text("Apparence", "Appearance")}</h3>
+            <div className="theme-toggle-row">
+              <span className="theme-label">
+                <i className="bi bi-moon"></i> {text("Thème", "Theme")}
+              </span>
+              <div className="theme-options">
+                <label className={`theme-radio ${theme === "light" ? "selected" : ""}`}>
+                  <input
+                    type="radio"
+                    name="theme"
+                    value="light"
+                    checked={theme === "light"}
+                    onChange={(event) => setTheme(event.target.value)}
+                  />
+                  <i className="bi bi-sun"></i> {text("Clair", "Light")}
+                </label>
+                <label className={`theme-radio ${theme === "system" ? "selected" : ""}`}>
+                  <input
+                    type="radio"
+                    name="theme"
+                    value="system"
+                    checked={theme === "system"}
+                    onChange={(event) => setTheme(event.target.value)}
+                  />
+                  <i className="bi bi-laptop"></i> {text("Système", "System")}
+                </label>
+                <label className={`theme-radio ${theme === "dark" ? "selected" : ""}`}>
+                  <input
+                    type="radio"
+                    name="theme"
+                    value="dark"
+                    checked={theme === "dark"}
+                    onChange={(event) => setTheme(event.target.value)}
+                  />
+                  <i className="bi bi-moon-stars"></i> {text("Sombre", "Dark")}
+                </label>
+              </div>
             </div>
           </div>
-        </div>
 
-        <form onSubmit={handleUpdate} className="settings-form">
           <div className="settings-form-section">
-            <h3>Informations de base</h3>
+            <h3>{text("Langue", "Language")}</h3>
+            <div className="settings-input-group">
+              <label htmlFor="settings-language">{text("Langue de l’interface", "Interface language")}</label>
+              <div className="settings-input-wrapper">
+                <span className="settings-input-icon"><i className="bi bi-translate"></i></span>
+                <select
+                  id="settings-language"
+                  className="settings-select"
+                  value={language}
+                  onChange={(event) => setLanguageDraft(event.target.value)}
+                >
+                  <option value="fr">Français</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="settings-form-section">
+            <h3>{text("Informations de base", "Basic information")}</h3>
             <div className="settings-input-group disabled-group">
-              <label>Adresse Email (Non modifiable)</label>
+              <label>{text("Adresse e-mail (non modifiable)", "Email address (cannot be changed)")}</label>
               <div className="settings-input-wrapper">
                 <span className="settings-input-icon"><i className="bi bi-envelope"></i></span>
                 <input type="text" value={user?.email || ""} disabled />
@@ -222,7 +244,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
             </div>
 
             <div className="settings-input-group">
-              <label htmlFor="settings-name">Nom complet</label>
+              <label htmlFor="settings-name">{text("Nom complet", "Full name")}</label>
               <div className="settings-input-wrapper">
                 <span className="settings-input-icon"><i className="bi bi-person"></i></span>
                 <input
@@ -230,7 +252,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
                   id="settings-name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Entrez votre nom complet"
+                  placeholder={text("Entrez votre nom complet", "Enter your full name")}
                   required
                 />
               </div>
@@ -238,11 +260,11 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
           </div>
 
           <div className="settings-form-section">
-            <h3>Détails Professionnels</h3>
+            <h3>{text("Détails professionnels", "Professional details")}</h3>
 
             <div className="settings-input-group">
               <label htmlFor="settings-company">
-                Entreprise / Organisation
+                {text("Entreprise / organisation", "Company / organization")}
               </label>
               <div className="settings-input-wrapper">
                 <span className="settings-input-icon"><i className="bi bi-building"></i></span>
@@ -251,13 +273,13 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
                   id="settings-company"
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  placeholder="Nom de votre entreprise"
+                  placeholder={text("Nom de votre entreprise", "Company name")}
                 />
               </div>
             </div>
 
             <div className="settings-input-group">
-              <label htmlFor="settings-phone">Numéro de téléphone</label>
+              <label htmlFor="settings-phone">{text("Numéro de téléphone", "Phone number")}</label>
               <div className="settings-input-wrapper phone-wrapper">
                 {/* Fully Custom Select Dropdown for PC Flag Support */}
                 <div className="custom-country-select" ref={dropdownRef}>
@@ -315,8 +337,8 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
               </div>
             </div>
 
-            <div className="settings-input-group" style={{ marginTop: "16px" }}>
-              <label htmlFor="settings-role">Votre rôle professionnel</label>
+            <div className="settings-input-group profession-group">
+              <label htmlFor="settings-role">{text("Votre profession", "Your occupation")}</label>
               <div className="settings-input-wrapper">
                 <span className="settings-input-icon"><i className="bi bi-briefcase"></i></span>
                 <select
@@ -325,10 +347,10 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
                   onChange={(e) => setRole(e.target.value)}
                   className="settings-select"
                 >
-                  <option value="worker">Travailleur</option>
-                  <option value="employer">Employeur / RH</option>
-                  <option value="specialist">Spécialiste SST / Médecin</option>
-                  <option value="student">Étudiant / Autre</option>
+                  <option value="worker">{text("Travailleur", "Worker")}</option>
+                  <option value="employer">{text("Employeur / RH", "Employer / HR")}</option>
+                  <option value="specialist">{text("Spécialiste SST / Médecin", "OSH specialist / Physician")}</option>
+                  <option value="student">{text("Étudiant / autre", "Student / Other")}</option>
                 </select>
               </div>
             </div>
@@ -341,7 +363,7 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
               onClick={onClose}
               disabled={loading}
             >
-              Annuler
+              {text("Annuler", "Cancel")}
             </button>
             <button
               type="submit"
@@ -350,18 +372,20 @@ const SettingsModal = ({ isOpen, onClose, user, profile, onProfileUpdate }) => {
             >
               {loading ? (
                 <>
-                  <span className="spinner"></span> Sauvegarde...
+                  <span className="spinner"></span> {text("Enregistrement…", "Saving…")}
                 </>
               ) : (
-                  <><i className="bi bi-floppy"></i> Sauvegarder les modifications</>
+                <>
+                  <i className="bi bi-floppy"></i> {text("Appliquer les changements", "Apply changes")}
+                </>
               )}
             </button>
           </div>
         </form>
 
         <div className="settings-member-since">
-          Membre depuis le{" "}
-          {new Date(user?.created_at || new Date()).toLocaleDateString("fr-FR")}
+          {text("Membre depuis le", "Member since")}{" "}
+          {new Date(user?.created_at || new Date()).toLocaleDateString(language === "fr" ? "fr-FR" : "en-GB")}
         </div>
       </div>
     </div>

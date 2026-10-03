@@ -183,10 +183,10 @@
   }
 
   .btn-login-nav {
-    padding: 0.45rem 0.55rem;
+    padding: 0.5rem;
     border-radius: 50%;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
     justify-content: center;
   }
 
@@ -196,6 +196,21 @@
 
   .logo-sub {
     display: none;
+  }
+
+  .navbar-container {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar-container {
+    padding: 0 8px;
+  }
+
+  .hamburger-btn {
+    padding: 0.3rem 0.4rem;
+    font-size: 1.2rem;
   }
 }
 

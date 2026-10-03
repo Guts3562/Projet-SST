@@ -246,6 +246,63 @@
 
 @media (max-width: 480px) {
   .modal-content {
-    padding: 24px 20px;
+    padding: 24px 18px;
+    max-height: 95vh;
+  }
+
+  .login-header {
+    margin-bottom: 22px;
+  }
+
+  .login-logo {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+
+  .login-header h2 {
+    font-size: 20px;
+  }
+
+  .login-header p {
+    font-size: 12.5px;
+  }
+
+  .login-form {
+    gap: 14px;
+  }
+
+  .input-wrapper input,
+  .input-wrapper select.role-select {
+    padding: 14px 16px 14px 40px;
+    font-size: 16px;
+    min-height: 48px;
+  }
+
+  .btn-login-submit {
+    padding: 16px !important;
+    font-size: 15px !important;
+    min-height: 50px;
+  }
+
+  .modal-close {
+    top: 12px;
+    right: 14px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 380px) {
+  .modal-content {
+    padding: 20px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .login-header h2 {
+    font-size: 18px;
+  }
+
+  .input-wrapper input,
+  .input-wrapper select.role-select {
+    padding: 12px 14px 12px 38px;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Quiz.css";
 import { api } from "../lib/api";
 
@@ -6,73 +6,60 @@ const QUIZ_SIZE = 10;
 
 const letters = ["A", "B", "C", "D"];
 
-function Quiz({ user, profile }) {
-  // Shuffle options
-  const shuffleOptions = (q) => {
-    const indices = [0, 1, 2, 3];
-    for (let i = indices.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [indices[i], indices[j]] = [indices[j], indices[i]];
-    }
-    return {
-      ...q,
-      options: indices.map((i) => q.options[i]),
-      correct: indices.indexOf(q.correct),
-    };
+const shuffleOptions = (question) => {
+  const indices = question.options.map((_, index) => index);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return {
+    ...question,
+    options: indices.map((index) => question.options[index]),
+    optionOrder: indices,
   };
+};
 
+function Quiz({ user }) {
   const [sessionData, setSessionData] = useState(null);
   const [loadError, setLoadError] = useState(null);
 
-  useEffect(() => {
-    const loadQuestions = async () => {
-      try {
-        const data = await api.quiz.getQuestions();
-        console.log("Fetched questions from API:", data);
-        const shuffled = data.slice(0, QUIZ_SIZE).map(shuffleOptions);
-        setSessionData({
-          sessionQuestions: shuffled,
-          answers: new Array(QUIZ_SIZE).fill(null),
-          currentQ: 0,
-          saved: false,
-        });
-      } catch (error) {
-        console.error("Failed to load questions:", error);
-        setLoadError(error.message);
+  const loadQuestions = useCallback(async () => {
+    setLoadError(null);
+    try {
+      const data = await api.quiz.getQuestions();
+      if (!Array.isArray(data) || data.length < QUIZ_SIZE) {
+        throw new Error(`Le quiz nécessite au moins ${QUIZ_SIZE} questions.`);
       }
-    };
-    loadQuestions();
+      const shuffled = data.slice(0, QUIZ_SIZE).map(shuffleOptions);
+      setSessionData({
+        sessionId: `${Date.now()}-${Math.random()}`,
+        sessionQuestions: shuffled,
+        answers: new Array(shuffled.length).fill(null),
+        currentQ: 0,
+        grading: false,
+        grade: null,
+        saveError: null,
+        saved: false,
+      });
+    } catch (error) {
+      console.error("Failed to load questions:", error);
+      setSessionData(null);
+      setLoadError(
+        error.message.startsWith("Le quiz nécessite")
+          ? error.message
+          : "Impossible de charger le quiz. Vérifiez votre connexion puis réessayez.",
+      );
+    }
   }, []);
+
+  useEffect(() => {
+    loadQuestions();
+  }, [loadQuestions]);
 
   const answered = sessionData
     ? sessionData.answers.filter((a) => a !== null).length
     : 0;
-  const isFinished = sessionData ? answered === QUIZ_SIZE : false;
-
-  // Save results to PostgreSQL when finished
-  useEffect(() => {
-    if (sessionData && isFinished && user && !sessionData.saved) {
-      const { sessionQuestions, answers } = sessionData;
-      const score = answers.filter(
-        (a, i) => a === sessionQuestions[i].correct,
-      ).length;
-      const saveResult = async () => {
-        try {
-          await api.quiz.saveResult({
-            noun: profile?.full_name || user?.email || "Anonyme",
-            role: profile?.role || "Utilisateur",
-            score: score,
-            total: QUIZ_SIZE,
-          });
-          setSessionData((prev) => ({ ...prev, saved: true }));
-          console.log("Score saved to PostgreSQL!");
-        } catch (error) {
-          console.error("Error saving score:", error);
-        }
-      };
-      saveResult();
-    }
-  }, [isFinished, user, profile, sessionData]);
+  const isFinished = sessionData ? answered === sessionData.sessionQuestions.length : false;
 
   if (loadError)
     return (
@@ -103,12 +90,51 @@ function Quiz({ user, profile }) {
       </div>
     );
 
+  const saveCompletedSession = async (session) => {
+    setSessionData((previous) =>
+      previous?.sessionId === session.sessionId
+        ? { ...previous, grading: true, saveError: null }
+        : previous,
+    );
+    try {
+      const grade = await api.quiz.saveResult({
+        answers: session.answers.map((selectedOption, index) => ({
+          questionId: session.sessionQuestions[index].id,
+          selectedOption: session.sessionQuestions[index].optionOrder[selectedOption],
+        })),
+      });
+      setSessionData((previous) =>
+        previous?.sessionId === session.sessionId
+          ? { ...previous, grading: false, grade, saved: true }
+          : previous,
+      );
+    } catch (error) {
+      console.error("Failed to grade and save quiz:", error);
+      setSessionData((previous) =>
+        previous?.sessionId === session.sessionId
+          ? {
+              ...previous,
+              grading: false,
+              saveError: "Impossible d’enregistrer le résultat. Vérifiez votre connexion puis réessayez.",
+            }
+          : previous,
+      );
+    }
+  };
+
   const selectAnswer = (idx) => {
     if (answers[currentQ] !== null) return;
-    setSessionData((prev) => ({
-      ...prev,
-      answers: prev.answers.map((a, i) => (i === currentQ ? idx : a)),
-    }));
+    const nextAnswers = answers.map((answer, index) =>
+      index === currentQ ? idx : answer,
+    );
+    const nextSession = {
+      ...sessionData,
+      answers: nextAnswers,
+    };
+    setSessionData(nextSession);
+    if (nextAnswers.every((answer) => answer !== null)) {
+      saveCompletedSession(nextSession);
+    }
   };
 
   const nextQ = () => {
@@ -133,29 +159,34 @@ function Quiz({ user, profile }) {
 
   const resetQuiz = () => {
     setSessionData(null);
-    const loadQuestions = async () => {
-      try {
-        const data = await api.quiz.getQuestions();
-        const shuffled = data.slice(0, QUIZ_SIZE).map(shuffleOptions);
-        setSessionData({
-          sessionQuestions: shuffled,
-          answers: new Array(shuffled.length).fill(null),
-          currentQ: 0,
-          saved: false,
-        });
-      } catch (error) {
-        console.error("Failed to load questions:", error);
-      }
-    };
     loadQuestions();
   };
 
   const progressPercent = (answered / QUIZ_SIZE) * 100;
 
+  if (isFinished && !sessionData.grade) {
+    return (
+      <div className="quiz-loading" role="status" aria-live="polite">
+        {sessionData.grading ? (
+          "Vérification et enregistrement des résultats..."
+        ) : (
+          <>
+            <p>{sessionData.saveError || "Le résultat n’a pas encore été vérifié."}</p>
+            <button
+              className="btn btn-primary"
+              onClick={() => saveCompletedSession(sessionData)}
+            >
+              Réessayer
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
+
   if (isFinished) {
-    const score = answers.filter(
-      (a, i) => a === sessionQuestions[i].correct,
-    ).length;
+    const { grade: serverGrade } = sessionData;
+    const score = serverGrade.score;
     const pct = Math.round((score / QUIZ_SIZE) * 100);
 
     let grade, gradeColor, msg, msgIcon;
@@ -163,17 +194,17 @@ function Quiz({ user, profile }) {
       grade = "Excellent";
       gradeColor = "#1A8754";
       msgIcon = <i className="bi bi-trophy"></i>;
-      msg = "Excellent. Vous démontrez une maîtrise complète des normes SST en vigueur en Tunisie.";
+      msg = "Excellent. Vous maîtrisez les connaissances abordées dans ce quiz pédagogique.";
     } else if (pct >= 80) {
       grade = "Très bien";
       gradeColor = "#27AE60";
       msgIcon = <i className="bi bi-thumbs-up"></i>;
-      msg = "Très bien. Quelques points méritent une révision pour atteindre l'excellence.";
+      msg = "Très bien. Quelques réponses méritent une révision pour atteindre l'excellence.";
     } else if (pct >= 60) {
       grade = "Passable";
       gradeColor = "#E67E22";
       msgIcon = <i className="bi bi-book"></i>;
-      msg = "Résultat satisfaisant. Nous vous invitons à consulter les ressources CNSS avant de renouveler l'évaluation.";
+      msg = "Résultat satisfaisant. Consultez les ressources pédagogiques avant de renouveler l'évaluation.";
     } else {
       grade = "Insuffisant";
       gradeColor = "#C0392B";
@@ -185,7 +216,8 @@ function Quiz({ user, profile }) {
     sessionQuestions.forEach((q, i) => {
       if (!catMap[q.category]) catMap[q.category] = { total: 0, correct: 0 };
       catMap[q.category].total++;
-      if (answers[i] === q.correct) catMap[q.category].correct++;
+      const correctIndex = q.optionOrder.indexOf(serverGrade.correctAnswers[q.id]);
+      if (answers[i] === correctIndex) catMap[q.category].correct++;
     });
     const catHtml = Object.entries(catMap).map(([cat, d]) => {
       const cpct = Math.round((d.correct / d.total) * 100);
@@ -209,7 +241,8 @@ function Quiz({ user, profile }) {
     });
 
     const detailHtml = sessionQuestions.map((q, i) => {
-      const ok = answers[i] === q.correct;
+      const correctIndex = q.optionOrder.indexOf(serverGrade.correctAnswers[q.id]);
+      const ok = answers[i] === correctIndex;
       return (
         <div key={i} className="result-item">
           <div className="result-icon">{ok ? <i className="bi bi-check-circle-fill"></i> : <i className="bi bi-x-circle-fill"></i>}</div>
@@ -218,11 +251,11 @@ function Quiz({ user, profile }) {
               Q{i + 1}. {q.text}
             </strong>
             {ok ? (
-              <em><i className="bi bi-check"></i> {q.options[q.correct]}</em>
+              <em><i className="bi bi-check"></i> {q.options[correctIndex]}</em>
             ) : (
               <span className="wrong-ans">
                 Votre réponse : {q.options[answers[i]]} &nbsp;|&nbsp; Correcte :{" "}
-                {q.options[q.correct]}
+                {q.options[correctIndex]}
               </span>
             )}
           </div>
@@ -236,7 +269,10 @@ function Quiz({ user, profile }) {
           <span className="section-label amber">Quiz SST</span>
           <h2>Évaluation de vos connaissances</h2>
           <p>
-            Cette évaluation comprend 10 questions sélectionnées aléatoirement parmi 31, couvrant la législation, les urgences, les EPI et les bonnes pratiques. Chaque session est unique.
+            Cette évaluation sélectionne aléatoirement 10 questions de la banque
+            pédagogique. Elle ne constitue pas une évaluation réglementaire.
+            Vérifiez les réponses portant sur des numéros, normes, seuils ou
+            obligations auprès des sources officielles avant tout usage pratique.
           </p>
         </div>
 
@@ -315,8 +351,7 @@ function Quiz({ user, profile }) {
     let cls = "";
     if (isAnswered) {
       cls += " locked";
-      if (idx === q.correct) cls += " correct";
-      else if (idx === userAnswer) cls += " wrong";
+      if (idx === userAnswer) cls += " selected";
     }
     return (
       <div
@@ -330,29 +365,10 @@ function Quiz({ user, profile }) {
     );
   });
 
-  let feedbackHtml = null;
-  if (isAnswered) {
-    const ok = userAnswer === q.correct;
-    feedbackHtml = (
-      <div className={`quiz-feedback ${ok ? "good" : "bad"}`}>
-        <div className="quiz-feedback-icon">{ok ? <i className="bi bi-check-circle-fill"></i> : <i className="bi bi-x-circle-fill"></i>}</div>
-        <div className="quiz-feedback-text">
-          <strong>{ok ? "Réponse correcte." : "Réponse incorrecte."}</strong>
-          <p>{q.explanation}</p>
-        </div>
-      </div>
-    );
-  }
-
   const dotsHtml = Array.from({ length: QUIZ_SIZE }, (_, i) => {
     let dotCls = "quiz-dot";
     if (i === currentQ) dotCls += " dot-current";
-    else if (answers[i] !== null) {
-      dotCls +=
-        answers[i] === sessionQuestions[i].correct
-          ? " dot-correct"
-          : " dot-wrong";
-    }
+    else if (answers[i] !== null) dotCls += " dot-answered";
     return (
       <span
         key={i}
@@ -374,7 +390,10 @@ function Quiz({ user, profile }) {
         <span className="section-label amber">Évaluation</span>
         <h2>Quiz SST Tunisie</h2>
         <p>
-          Cette évaluation comprend 10 questions sélectionnées aléatoirement parmi 41, couvrant la législation, les urgences, les EPI et les bonnes pratiques. Chaque session est unique.
+          Cette évaluation sélectionne aléatoirement 10 questions de la banque
+          pédagogique. Elle ne constitue pas une évaluation réglementaire.
+          Vérifiez les réponses portant sur des numéros, normes, seuils ou
+          obligations auprès des sources officielles avant tout usage pratique.
         </p>
       </div>
 
@@ -396,7 +415,6 @@ function Quiz({ user, profile }) {
           <div className="quiz-dot-nav">{dotsHtml}</div>
           <div className="quiz-q">{q.text}</div>
           <div className="quiz-options">{optionsHtml}</div>
-          {feedbackHtml}
           <div className="quiz-actions">
             <button
               className="btn btn-secondary"

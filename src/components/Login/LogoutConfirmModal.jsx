@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
+import { localized } from "../../lib/language";
 import "./LogoutConfirmModal.css";
 
-const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
+const LogoutConfirmModal = ({ isOpen, onClose, onConfirm, language = "fr" }) => {
+  const text = (french, english) => localized(language, french, english);
+
   // Prevent background scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -22,25 +25,26 @@ const LogoutConfirmModal = ({ isOpen, onClose, onConfirm }) => {
         className="modal-content logout-confirm-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="modal-close" onClick={onClose}>
+        <button type="button" className="modal-close" onClick={onClose} aria-label={text("Fermer", "Close")}>
           &times;
         </button>
 
         <div className="logout-header">
           <div className="logout-icon-big"><i className="bi bi-box-arrow-right"></i></div>
-          <h2>Déconnexion</h2>
-          <p>Êtes-vous sûr de vouloir vous déconnecter de votre espace SST ?</p>
+          <h2>{text("Déconnexion", "Sign out")}</h2>
+          <p>{text("Êtes-vous sûr de vouloir vous déconnecter de votre espace SST ?", "Are you sure you want to sign out of your SST account?")}</p>
         </div>
 
         <div className="logout-actions">
-          <button className="btn btn-secondary" onClick={onClose}>
-            Annuler
+          <button type="button" className="btn btn-secondary" onClick={onClose}>
+            {text("Annuler", "Cancel")}
           </button>
           <button
+            type="button"
             className="btn btn-primary logout-btn-final"
             onClick={onConfirm}
           >
-            Oui, me déconnecter
+            {text("Oui, me déconnecter", "Yes, sign out")}
           </button>
         </div>
       </div>

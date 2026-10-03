@@ -137,11 +137,53 @@
     grid-template-columns: 1fr;
   }
   .risk-header {
-    padding: 16px 18px;
+    padding: 18px 20px;
     gap: 12px;
+    min-height: 52px;
+  }
+  .risk-icon-wrap {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+  .risk-title h4 {
+    font-size: 15px;
+  }
+  .risk-title p {
+    font-size: 12px;
   }
   .risk-body {
-    padding: 0 18px 18px;
+    padding: 0 20px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .risk-header {
+    padding: 16px;
+    gap: 10px;
+    min-height: 48px;
+  }
+  .risk-icon-wrap {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+  .risk-title h4 {
+    font-size: 14px;
+  }
+  .risk-title p {
+    font-size: 11px;
+  }
+  .risk-chevron {
+    font-size: 18px;
+  }
+  .risk-body {
+    padding: 0 16px 16px;
+  }
+  .risk-col li {
+    font-size: 13px;
+    padding: 6px 0;
   }
 }
 

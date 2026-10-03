@@ -32,12 +32,18 @@
   margin-bottom: 0.3rem;
 }
 
-.emergency-num {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color:var(--tint-red-text);
+.emergency-status {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid rgba(192, 57, 43, 0.24);
+  border-radius: 999px;
+  color: var(--tint-red-text);
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1.25;
   letter-spacing: 0.02em;
-  margin-bottom: 0.15rem;
+  text-transform: uppercase;
 }
 
 .emergency-label {
@@ -110,11 +116,25 @@
 }
 
 /* ---- EPI Table ---- */
+.epi-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.epi-table-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 .epi-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.82rem;
-  margin-top: 1rem;
+  min-width: 480px;
 }
 
 .epi-table thead tr {
@@ -130,12 +150,14 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color:var(--text-heading);
+  white-space: nowrap;
 }
 
 .epi-table td {
   padding: 0.6rem 0.9rem;
   color:var(--text-body);
   border-bottom:1px solid var(--border-soft);
+  white-space: nowrap;
 }
 
 .epi-table tbody tr:hover td {
@@ -331,6 +353,29 @@
   margin-bottom: 0.75rem;
 }
 
+.sources-sst a,
+.sources-sst a:visited {
+  color: var(--tint-blue-text);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease, text-decoration-thickness 0.2s ease;
+}
+
+.sources-sst a:hover {
+  color: var(--blue);
+  text-decoration-thickness: 2px;
+}
+
+.sources-sst a:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+
 /* ---- Grid helper ---- */
 .grid-2 {
   display: grid;
@@ -348,9 +393,47 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .emergency-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .emergency-card {
+    padding: 14px 10px;
+  }
+
+  .emergency-status {
+    font-size: 0.55rem;
+  }
+
+  .emergency-label {
+    font-size: 0.65rem;
+  }
+
+  .institution-card {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .institution-logo {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .institution-card h4 {
+    font-size: 0.85rem;
+  }
+
+  .institution-card p {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .emergency-grid {
+    grid-template-columns: 1fr;
   }
 
   .epi-table th,
@@ -358,7 +441,17 @@
     padding: 0.5rem 0.55rem;
     font-size: 0.75rem;
   }
+
+  .cta-banner {
+    padding: 32px 20px;
+  }
+
+  .cta-banner-title {
+    font-size: 20px;
+  }
+
+  .cta-banner-text {
+    font-size: 13px;
+  }
 }
-
-
 

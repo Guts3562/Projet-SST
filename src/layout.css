@@ -250,19 +250,25 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: 14px;
+  color: var(--text-heading);
   transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.profile-btn i {
+  color: inherit;
 }
 
 .profile-btn:hover {
   background: var(--surface-3);
-  border-color: var(--text-muted);
+  border-color: var(--blue);
+  color: var(--blue);
   transform:translateY(-1px);
 }
 
 .profile-btn.logout {
   background: var(--tint-red);
-  border-color: rgba(224,82,82,0.2);
-  color: var(--red);
+  border-color: var(--tint-red-text);
+  color: var(--tint-red-text);
 }
 
 .profile-btn.logout:hover {
@@ -364,6 +370,11 @@
   transition:all 0.2s ease;
 }
 
+.inner-user-name,
+.hero-user-name {
+  overflow-wrap: anywhere;
+}
+
 .inner-user-pill:hover, .hero-user-pill:hover { box-shadow:0 2px 8px rgba(0,0,0,0.08); }
 
 /* Hero elements overlay triggers */
@@ -424,17 +435,90 @@
 }
 
 /* ─── RESPONSIVE STYLING ─────────────────────────────────────── */
+/* Minimum touch target: 44x44px per WCAG/Apple HIG/Google Material */
+
+@media (max-width: 1023px) {
+  .sidebar {
+    width: min(280px, 85vw);
+  }
+}
+
 @media (max-width: 576px) {
-  .inner-user-pill, .hero-user-pill {
+  .hero-user-pill {
     display: none;
   }
 
   .inner-top-bar {
-    padding: 0 20px;
+    min-height: 60px;
+    height: auto;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+
+  .inner-menu-btn {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .inner-page-title {
+    min-width: 0;
+    flex: 1;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .inner-user-pill {
+    max-width: 38%;
+    flex-shrink: 1;
+    gap: 5px;
+    padding: 6px 8px;
+    font-size: 11px;
+    white-space: normal;
   }
 
   .hero {
-    padding-top: 90px !important;
+    padding-top: 80px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .hero-menu-btn {
+    top: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Safe area insets for notched phones */
+  .sidebar {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .sidebar-profile {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+
+  .sidebar-footer {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 380px) {
+  .inner-top-bar {
+    padding: 0 12px;
+  }
+
+  .hero {
+    padding-top: 72px !important;
+  }
+
+  .hero-menu-btn {
+    top: 12px;
+    left: 12px;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -444,5 +528,4 @@
     margin-left: var(--sidebar-width);
   } */
 }
-
 

@@ -25,6 +25,17 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Password reset tokens are stored hashed and expire after a short period.
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+  token_hash CHAR(64) PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMP NOT NULL,
+  used_at TIMESTAMP,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS password_reset_tokens_user_id_idx
+  ON password_reset_tokens(user_id);
+
 -- Create quiz_results table
 CREATE TABLE IF NOT EXISTS quiz_results (
   id SERIAL PRIMARY KEY,
@@ -42,7 +53,12 @@ CREATE TABLE IF NOT EXISTS questions (
   text TEXT NOT NULL,
   options TEXT[] NOT NULL,
   correct INTEGER NOT NULL,
-  category VARCHAR(100) NOT NULL
+  category VARCHAR(100) NOT NULL,
+  source_url TEXT,
+  source_reference TEXT,
+  verified_at DATE,
+  status VARCHAR(20) NOT NULL DEFAULT 'published'
+    CHECK (status IN ('draft', 'published', 'archived'))
 );
 
 -- Seed default SST Tunis questions
@@ -61,7 +77,7 @@ INSERT INTO questions (text, options, correct, category) VALUES
 ('Selon la loi tunisienne, quel délai maximum l''employeur a-t-il pour déclarer un accident du travail à la CNSS ?', ARRAY['24 heures','48 heures','72 heures','7 jours ouvrables'], 1, 'Législation'),
 ('Quel EPI est obligatoire pour les travaux en hauteur (>2m) sur les chantiers tunisiens ?', ARRAY['Un simple casque de chantier','Un gilet de signalisation jaune','Un harnais de sécurité avec point d''ancrage certifié NT 09.12','Des gants anti-coupure'], 2, 'EPI'),
 ('Quel organisme est chargé de la gestion des risques professionnels en Tunisie ?', ARRAY['Le ministère de la Santé','La CNSS — Caisse Nationale de Sécurité Sociale','L''UTICA','La Banque Centrale de Tunisie'], 1, 'Institutions'),
-('Que signifie le sigle SST dans le contexte professionnel tunisien ?', ARRAY['Sécurité et Sauvetage au Travail','Sauveteur Secouriste du Travail','Service Santé Travail','Sécurité Systématique au Travail'], 1, 'Formation'),
+('Dans le contexte de ce site, que signifie le sigle SST ?', ARRAY['Santé et sécurité au travail','Sauveteur Secouriste du Travail','Service Santé Travail','Sécurité Systématique au Travail'], 0, 'Formation'),
 ('Selon les statistiques tunisiennes, quel secteur concentre le plus d''accidents du travail ?', ARRAY['Le secteur textile','L''agriculture','Le BTP — Bâtiment et Travaux Publics','Le secteur tertiaire (services)'], 2, 'Statistiques'),
 ('Quel numéro composer en cas d''intoxication chimique ou médicamenteuse en Tunisie ?', ARRAY['190','198','71 335 500','55 590 228'], 2, 'Urgences'),
 ('Quelle procédure doit être appliquée avant toute intervention de maintenance sur une machine industrielle ?', ARRAY['Prévenir l''équipe et continuer','La procédure de consignation-déconsignation (LOTO)','Éteindre uniquement l''interrupteur principal','Poser une affiche d''avertissement'], 1, 'Prévention'),
@@ -79,6 +95,21 @@ INSERT INTO questions (text, options, correct, category) VALUES
 ('Quelle est la première action à effectuer face à un collègue victime d''un arrêt cardiaque au travail ?', ARRAY['Appeler immédiatement la famille','Alerter les secours (190/198) et commencer la RCP si formé','Lui donner de l''eau et attendre','Le déplacer immédiatement vers un endroit plus confortable'], 1, 'Prévention'),
 ('Qu''est-ce qu''un "triangle du feu" en matière de prévention incendie ?', ARRAY['Un panneau de signalisation triangulaire d''alerte incendie','Les trois éléments nécessaires à la combustion : combustible, comburant et énergie d''activation','Le nom d''un extincteur à usage professionnel','Une procédure d''évacuation en triangle'], 1, 'Prévention')
 ON CONFLICT (id) DO NOTHING;
+
+UPDATE questions
+SET status = 'draft'
+WHERE id IN (1, 2, 5, 7, 12, 13, 16, 19, 20, 25, 27, 28, 29);
+
+UPDATE questions
+SET status = 'archived'
+WHERE id IN (11, 17);
+
+UPDATE questions
+SET text = 'Dans le contexte de ce site, que signifie le sigle SST ?',
+    options = ARRAY['Santé et sécurité au travail','Sauveteur Secouriste du Travail','Service Santé Travail','Sécurité Systématique au Travail'],
+    correct = 0,
+    category = 'Formation'
+WHERE id = 15;
 
 -- Seed demo users
 INSERT INTO users (id, email, password_hash, created_at) VALUES

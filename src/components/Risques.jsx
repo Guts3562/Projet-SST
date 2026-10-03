@@ -26,6 +26,11 @@ function Risques() {
           Cliquez sur chaque catégorie pour voir les dangers détaillés et les
           mesures de prévention adaptées.
         </p>
+        <p>
+          Contenu pédagogique général : les mesures, seuils et obligations
+          doivent être vérifiés selon le texte officiel applicable et
+          l’évaluation des risques du lieu de travail.
+        </p>
       </div>
 
       <div id="riskList">

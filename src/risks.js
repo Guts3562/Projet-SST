@@ -2,7 +2,7 @@ export const risks = [
   {
     icon: 'bi bi-buildings', color: 'red',
     title: 'Chutes de hauteur — BTP',
-    subtitle: 'Premier cause de mortalité au travail en Tunisie',
+    subtitle: 'Risque important lié aux travaux en hauteur',
     dangers: [
       'Échafaudages non conformes aux normes NT',
       'Absence de garde-corps et de filets de sécurité',
@@ -10,9 +10,9 @@ export const risks = [
       'Sols glissants et surfaces instables',
     ],
     prevention: [
-      'Port obligatoire du harnais de sécurité (NT 09.12)',
+      'Choisir un système de protection contre les chutes adapté au risque et aux exigences applicables',
       'Échafaudages certifiés et vérifiés périodiquement',
-      'Formation aux travaux en hauteur (h > 2m)',
+      'Évaluer le risque de chute et former les intervenants avant les travaux en hauteur',
       'Permis de travail en hauteur signé par le chef de chantier',
     ]
   },
@@ -28,7 +28,7 @@ export const risks = [
     ],
     prevention: [
       'Port des EPI complets (combinaison, gants, masque FFP2)',
-      'Lecture obligatoire de la FDS avant utilisation',
+      'Consulter la FDS et les consignes applicables avant utilisation',
       'Respect strict des délais de réentrée post-traitement',
       'Formation agréée à la manipulation des pesticides',
     ]
@@ -41,13 +41,13 @@ export const risks = [
       'Accès aux parties mobiles des machines',
       'Absence de protecteurs ou de carter',
       'Manque d\'arrêt d\'urgence accessible',
-      'Exposition au bruit intense (>85 dB)',
+      'Exposition au bruit potentiellement dangereux',
     ],
     prevention: [
       'Protecteurs de machines conformes aux normes NT',
       'Bouton d\'arrêt d\'urgence à portée de main',
       'Consignation-déconsignation avant maintenance (LOTO)',
-      'Port de protection auditive obligatoire',
+      'Évaluer l’exposition au bruit et choisir une protection auditive adaptée',
     ]
   },
   {
@@ -61,9 +61,9 @@ export const risks = [
       'Non-affichage des plans d\'évacuation',
     ],
     prevention: [
-      'Extincteurs vérifiés tous les 12 mois',
-      'Plans d\'évacuation affichés à chaque étage',
-      'Exercice d\'évacuation au moins 1 fois/an',
+      'Vérifier et entretenir les équipements de lutte contre l’incendie selon les règles applicables',
+      'Prévoir des consignes d’évacuation adaptées au site',
+      'Organiser des exercices selon les exigences applicables et les risques du site',
       'Mise aux normes électriques par professionnel agréé',
     ]
   },
@@ -80,7 +80,7 @@ export const risks = [
     prevention: [
       'Respect du Code de la Route tunisien',
       'Formation à la conduite défensive et préventive',
-      'Pauses obligatoires toutes les 2h de conduite',
+      'Prévoir des pauses adaptées à la durée du trajet et aux exigences applicables',
       'Vérification régulière des véhicules professionnels',
     ]
   },
@@ -95,10 +95,10 @@ export const risks = [
       'Maladies professionnelles à apparition retardée',
     ],
     prevention: [
-      'Ventilation locale aspirante obligatoire',
+      'Évaluer les besoins en ventilation et privilégier le captage à la source',
       'Masques FFP2/FFP3 adaptés aux poussières',
       'Surveillance médicale semestrielle renforcée',
-      'Déclaration obligatoire des maladies professionnelles à la CNSS',
+      'Vérifier les procédures de déclaration applicables auprès des organismes compétents',
     ]
   },
   {
@@ -112,10 +112,10 @@ export const risks = [
       'Utilisation de matériel électrique endommagé',
     ],
     prevention: [
-      'Habilitation électrique obligatoire (B1, B2, BR…)',
+      'Vérifier les qualifications et autorisations nécessaires avant toute intervention électrique',
       'Vérification périodique par électricien agréé',
       'Procédure de consignation avant intervention',
-      'Disjoncteurs différentiels 30mA obligatoires',
+      'Faire vérifier les protections électriques par une personne compétente',
     ]
   },
   {

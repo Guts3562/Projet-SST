@@ -7,13 +7,13 @@
     "dev": "concurrently \"vite --host\" \"cd server && npm run dev\"",
     "start:docker": "concurrently \"vite --host\" \"cd server && npm run dev\"",
     "build": "vite build",
+    "test": "npm --prefix server test",
     "start": "npm run build && cd server && npm start",
     "lint": "eslint .",
     "preview": "vite preview",
     "push-all": "git add . && git commit -m \"auto: update project files\" && git push origin main"
   },
   "dependencies": {
-    "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

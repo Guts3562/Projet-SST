@@ -9,7 +9,7 @@ function Accueil({ onTabChange }) {
         <span className="section-label green">Cadre National de Prévention</span>
         <h2>Orientations Stratégiques &amp; Protection des Effectifs</h2>
         <p>
-          En conformité stricte avec les dispositions législatives tunisiennes (notamment le Code du Travail et les décrets d'application n°2000-389 et n°2001-641), notre mission consiste à structurer la prévention des risques professionnels et à accompagner les organisations dans la mise en conformité de leurs environnements de travail.
+          Projet pédagogique de sensibilisation à la prévention des risques professionnels. Les références réglementaires présentées sont à vérifier auprès des textes officiels avant tout usage de conformité.
         </p>
       </div>
 
@@ -18,7 +18,7 @@ function Accueil({ onTabChange }) {
           <div className="sector-icon red"><i className="bi bi-buildings"></i></div>
           <h4>Bâtiment &amp; Travaux Publics (BTP)</h4>
           <p>
-            Premier secteur accidentogène en Tunisie, concentrant près de 35% des sinistres déclarés. Vigilance accrue requise sur les chantiers.
+            Les chantiers présentent des risques importants de chute, de heurt et d’exposition aux équipements. Les statistiques sectorielles nécessitent une source officielle datée.
           </p>
           <span className="pill pill-red">Risque Critique</span>
         </div>
@@ -42,12 +42,12 @@ function Accueil({ onTabChange }) {
 
       <div className="grid-2" style={{ marginBottom: "40px" }}>
         <div className="card success">
-          <h3><i className="bi bi-journal-text"></i> Références Législatives</h3>
+          <h3><i className="bi bi-journal-text"></i> Textes à consulter et vérifier</h3>
           <ul>
-            <li>Loi Organique &amp; Code du Travail (Loi n°66-27 du 30 avril 1966 et ses amendements)</li>
-            <li>Décret n°2000-389 (Réglementation des comités de santé et sécurité au travail)</li>
-            <li>Décret n°2001-641 (Organisation des services de médecine du travail)</li>
-            <li>Directives techniques du Ministère des Affaires Sociales</li>
+            <li>Code du Travail tunisien et textes modificatifs — articles applicables à rechercher dans le JORT.</li>
+            <li>Décrets et arrêtés applicables à la SST — numéro, objet et version consolidée à confirmer.</li>
+            <li>Normes tunisiennes — référence, édition en vigueur et champ d’application à confirmer auprès de l’INNORPI.</li>
+            <li>Consultez la rubrique « Sources et limites de vérification » avant d’utiliser une affirmation réglementaire.</li>
           </ul>
         </div>
         <div className="card info">
