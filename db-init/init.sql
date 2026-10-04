@@ -111,26 +111,5 @@ SET text = 'Dans le contexte de ce site, que signifie le sigle SST ?',
     category = 'Formation'
 WHERE id = 15;
 
--- Seed demo users
-INSERT INTO users (id, email, password_hash, created_at) VALUES
-(1, 'mr.hafyen@gmail.com', '$2a$10$LwN5f3NuO1rZu.IgjwO.h.9cTm714hmd/C5E/y3JH8bIqS5zBYcAa', '2026-05-01 20:44:00.347473+01'),
-(2, 'louayhafyen1@gmail.com', '$2a$10$HjIZYPxa30z7QqDvxGUNNee0mRCaWL9MB3TpRd3d5J1fUyqB6O0X.', '2026-05-02 07:09:27.80955+01')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO profiles (id, email, full_name, role, company, phone) VALUES
-(1, 'mr.hafyen@gmail.com', 'Louay', 'student', NULL, NULL),
-(2, 'louayhafyen1@gmail.com', 'EL HAFYEN Louây', 'student', NULL, NULL)
-ON CONFLICT (id) DO NOTHING;
-
--- Seed demo quiz results
-INSERT INTO quiz_results (user_id, noun, role, score, total, created_at) VALUES
-(1, 'Louay', 'student', 2, 10, '2026-05-01 21:06:37.420685+01'),
-(1, 'Louay', 'student', 5, 10, '2026-05-01 21:28:54.314883+01'),
-(1, 'Louay', 'student', 4, 10, '2026-05-23 19:18:14.901096+01'),
-(1, 'Louay', 'student', 3, 10, '2026-06-12 18:59:01.2172+01')
-ON CONFLICT DO NOTHING;
-
 -- Fix sequences
-SELECT pg_catalog.setval('public.users_id_seq', (SELECT MAX(id) FROM public.users), true);
-SELECT pg_catalog.setval('public.quiz_results_id_seq', (SELECT MAX(id) FROM public.quiz_results), true);
 SELECT pg_catalog.setval('public.questions_id_seq', (SELECT MAX(id) FROM public.questions), true);

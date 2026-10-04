@@ -176,6 +176,16 @@ Les paramètres PostgreSQL sont également définis dans `.env`. Le script [db-i
 
 Sur une base déjà créée, modifier `DB_PASSWORD` dans `.env` ne change pas automatiquement le mot de passe du rôle PostgreSQL existant.
 
+### Données de démonstration facultatives
+
+Les comptes et résultats de démonstration ne sont pas chargés automatiquement. Pour une base locale de développement uniquement, après avoir démarré l’application et laissé ses migrations s’exécuter, vous pouvez lancer :
+
+```powershell
+Get-Content -Raw .\db-seed\seed-dev.sql | docker compose exec -T db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"'
+```
+
+Ce script crée le compte `demo-client@example.invalid` avec le mot de passe `SST-Dev-Only-ChangeMe!` et ajoute quelques résultats d’exemple. Il est séparé de l’initialisation automatique et ne doit jamais être utilisé dans une base partagée ou de production.
+
 ## Utilisation
 
 1. Ouvrez l’application et choisissez le type de connexion.
@@ -207,6 +217,7 @@ Les informations relatives aux obligations, normes, organismes, coordonnées ou 
 ```text
 .
 ├── db-init/                 # Schéma et données initiales PostgreSQL
+├── db-seed/                 # Données de démonstration, à charger manuellement en développement
 ├── public/                  # Ressources publiques de l’interface
 ├── server/
 │   ├── index.js             # Serveur Express et routes API
